@@ -67,3 +67,44 @@ lemma query run "select title, auto_remediation_safe, success_rate from runbooks
 lemma query run "select title, status from incidents"                            # both resolved
 lemma query run "select engineer, timezone from on_call_schedule order by start_time"
 ```
+
+---
+
+## Day 2 — Agents (the brain)
+
+Four Lemma agents (`agents/<name>/<name>.json` + `instruction.md`), each with the
+`POD` toolset and explicit name-based grants. See `agents/DAY2_LOG.md` for the full
+build + integration-test log.
+
+```
+alerts (new) -> [alert_correlator] -> [root_cause_analyzer] -> incidents
+                                                  |
+                                                  v
+                          [remediation_suggester] -> remediation_actions
+                                                  |
+                          (incident resolved) -> [post_mortem_writer] -> post_mortems
+```
+
+| Agent | Reads | Writes |
+|---|---|---|
+| `alert_correlator` | alerts | alerts (correlation_group, status) |
+| `root_cause_analyzer` | alerts, runbooks, incidents, on_call_schedule | incidents |
+| `remediation_suggester` | incidents, runbooks | remediation_actions |
+| `post_mortem_writer` | incidents, remediation_actions, alerts | post_mortems |
+
+**Model pin (required):** all agents set `agent_runtime.model_name = "kimi-k2.7-code"`.
+The default `minimax-m3` failed to emit nested tool-call arguments, so datastore
+writes silently no-op'd. Keep a capable model pinned on Day 3 workflow AGENT nodes.
+
+**Schema additions on `incidents` (Day 2):** `confidence_score` (FLOAT),
+`matched_runbook_id` (TEXT), `correlation_group_id` (TEXT — enables incident dedup).
+
+### Run the chain
+
+```powershell
+lemma agents run alert_correlator "Process all alerts in status 'new'..."
+lemma agents run root_cause_analyzer "Analyze correlation group CG-PAY-YYYYMMDD-001..."
+lemma agents run remediation_suggester "Propose remediation for incident <id>..."
+# mark incident resolved, then:
+lemma agents run post_mortem_writer "Write a post-mortem for resolved incident <id>..."
+```

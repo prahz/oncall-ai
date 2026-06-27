@@ -1,0 +1,39 @@
+{
+  "name": "remediation_suggester",
+  "description": "Fix Recommender. Reads an incident and its matched runbook, proposes remediation actions with per-action confidence, and decides auto-approval vs human sign-off.",
+  "instruction": { "$file": "instruction.md" },
+  "toolsets": ["POD"],
+  "agent_runtime": { "profile_id": "system:lemma", "model_name": "kimi-k2.7-code" },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "incident_id": { "type": "string" },
+      "decision_summary": { "type": "string", "description": "Brief explanation of the overall decision logic for the on-call engineer" },
+      "actions": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "remediation_action_id": { "type": "string", "description": "id of the created remediation_actions row" },
+            "action_type": { "type": "string", "enum": ["restart_service", "scale_up", "rollback_deploy", "clear_cache", "notify_team", "manual_fix_required"] },
+            "description": { "type": "string" },
+            "confidence": { "type": "number" },
+            "auto_approved": { "type": "boolean" },
+            "status": { "type": "string", "enum": ["pending_approval", "approved", "executed", "failed", "rejected"] },
+            "explanation": { "type": "string" }
+          },
+          "required": ["action_type", "description", "confidence", "auto_approved", "status", "explanation"]
+        }
+      }
+    },
+    "required": ["incident_id", "actions", "decision_summary"]
+  },
+  "permissions": { "grants": [
+    { "resource_type": "datastore_table", "resource_name": "incidents",
+      "permission_ids": ["datastore.table.read", "datastore.record.read"] },
+    { "resource_type": "datastore_table", "resource_name": "runbooks",
+      "permission_ids": ["datastore.table.read", "datastore.record.read"] },
+    { "resource_type": "datastore_table", "resource_name": "remediation_actions",
+      "permission_ids": ["datastore.table.read", "datastore.record.read", "datastore.record.write"] }
+  ]}
+}

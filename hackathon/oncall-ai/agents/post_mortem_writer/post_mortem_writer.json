@@ -1,0 +1,55 @@
+{
+  "name": "post_mortem_writer",
+  "description": "Incident Historian. Reads a resolved incident plus its alerts and remediation actions and writes a structured post-mortem draft for human review.",
+  "instruction": { "$file": "instruction.md" },
+  "toolsets": ["POD"],
+  "agent_runtime": { "profile_id": "system:lemma", "model_name": "kimi-k2.7-code" },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "post_mortem_id": { "type": "string", "description": "id of the created post_mortems row" },
+      "incident_id": { "type": "string" },
+      "status": { "type": "string", "enum": ["draft", "pending_review", "approved", "published"] },
+      "timeline": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "timestamp": { "type": "string" },
+            "event": { "type": "string" },
+            "type": { "type": "string", "enum": ["alert", "detection", "action", "resolution", "escalation"] }
+          },
+          "required": ["timestamp", "event", "type"]
+        }
+      },
+      "root_cause_summary": { "type": "string" },
+      "impact_assessment": { "type": "string" },
+      "lessons_learned": { "type": "string" },
+      "action_items": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "title": { "type": "string" },
+            "description": { "type": "string" },
+            "owner": { "type": "string" },
+            "priority": { "type": "string", "enum": ["high", "medium", "low"] },
+            "due_date": { "type": "string" }
+          },
+          "required": ["title", "description", "owner", "priority", "due_date"]
+        }
+      }
+    },
+    "required": ["post_mortem_id", "incident_id", "status", "timeline", "root_cause_summary", "impact_assessment", "lessons_learned", "action_items"]
+  },
+  "permissions": { "grants": [
+    { "resource_type": "datastore_table", "resource_name": "incidents",
+      "permission_ids": ["datastore.table.read", "datastore.record.read"] },
+    { "resource_type": "datastore_table", "resource_name": "remediation_actions",
+      "permission_ids": ["datastore.table.read", "datastore.record.read"] },
+    { "resource_type": "datastore_table", "resource_name": "alerts",
+      "permission_ids": ["datastore.table.read", "datastore.record.read"] },
+    { "resource_type": "datastore_table", "resource_name": "post_mortems",
+      "permission_ids": ["datastore.table.read", "datastore.record.read", "datastore.record.write"] }
+  ]}
+}

@@ -1,0 +1,35 @@
+{
+  "name": "alert_correlator",
+  "description": "Pattern Recognition Engine. Groups related new alerts into correlation clusters and writes correlation_group + status back to the alerts table.",
+  "instruction": { "$file": "instruction.md" },
+  "toolsets": ["POD"],
+  "agent_runtime": { "profile_id": "system:lemma", "model_name": "kimi-k2.7-code" },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "groups_created": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "correlation_group_id": { "type": "string" },
+            "alert_ids": { "type": "array", "items": { "type": "string" } },
+            "reason": { "type": "string" },
+            "primary_metric": { "type": "string" },
+            "alerts_updated": { "type": "integer" },
+            "ungrouped": { "type": "boolean" }
+          },
+          "required": ["correlation_group_id", "alert_ids", "reason"]
+        }
+      },
+      "ungrouped_alerts": { "type": "array", "items": { "type": "string" } },
+      "total_alerts_processed": { "type": "integer" },
+      "total_groups_created": { "type": "integer" }
+    },
+    "required": ["groups_created", "ungrouped_alerts", "total_alerts_processed", "total_groups_created"]
+  },
+  "permissions": { "grants": [
+    { "resource_type": "datastore_table", "resource_name": "alerts",
+      "permission_ids": ["datastore.table.read", "datastore.record.read", "datastore.record.write"] }
+  ]}
+}

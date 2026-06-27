@@ -13,7 +13,10 @@
     { "name": "on_call_engineer", "type": "TEXT", "description": "Assigned engineer's name or email" },
     { "name": "started_at", "type": "DATETIME" },
     { "name": "mitigated_at", "type": "DATETIME", "description": "Nullable" },
-    { "name": "resolved_at", "type": "DATETIME", "description": "Nullable" }
+    { "name": "resolved_at", "type": "DATETIME", "description": "Nullable" },
+    { "name": "confidence_score", "type": "FLOAT", "description": "Day 2: root_cause_analyzer's overall confidence in the root cause (0.0-1.0)" },
+    { "name": "matched_runbook_id", "type": "TEXT", "description": "Day 2: id of the best-matching runbook, or null" },
+    { "name": "correlation_group_id", "type": "TEXT", "description": "Day 2: the alerts.correlation_group this incident was created from (used to prevent duplicate incidents per group)" }
   ],
   "config": {}
 }

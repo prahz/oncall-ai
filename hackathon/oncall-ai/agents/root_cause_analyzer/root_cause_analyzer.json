@@ -1,0 +1,37 @@
+{
+  "name": "root_cause_analyzer",
+  "description": "Incident Detective. Takes a correlated alert group and creates a fully-analyzed incident row (title, root cause, blast radius, severity, confidence, matched runbook).",
+  "instruction": { "$file": "instruction.md" },
+  "toolsets": ["POD"],
+  "agent_runtime": { "profile_id": "system:lemma", "model_name": "kimi-k2.7-code" },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "incident_id": { "type": "string", "description": "id of the created (or existing) incidents row" },
+      "duplicate_detected": { "type": "boolean", "description": "true if an incident for this correlation group already existed and no new row was created" },
+      "title": { "type": "string" },
+      "severity": { "type": "string", "enum": ["critical", "high", "medium", "low"] },
+      "status": { "type": "string" },
+      "affected_services": { "type": "array", "items": { "type": "string" } },
+      "root_cause": { "type": "string" },
+      "blast_radius": { "type": "string", "enum": ["single_service", "multi_service", "infrastructure"] },
+      "triggering_alerts": { "type": "array", "items": { "type": "string" } },
+      "on_call_engineer": { "type": "string" },
+      "started_at": { "type": "string" },
+      "matched_runbook_id": { "type": ["string", "null"] },
+      "matched_past_incident": { "type": ["string", "null"] },
+      "confidence_score": { "type": "number" }
+    },
+    "required": ["incident_id", "duplicate_detected", "title", "severity", "status", "affected_services", "root_cause", "blast_radius", "confidence_score"]
+  },
+  "permissions": { "grants": [
+    { "resource_type": "datastore_table", "resource_name": "alerts",
+      "permission_ids": ["datastore.table.read", "datastore.record.read"] },
+    { "resource_type": "datastore_table", "resource_name": "runbooks",
+      "permission_ids": ["datastore.table.read", "datastore.record.read"] },
+    { "resource_type": "datastore_table", "resource_name": "on_call_schedule",
+      "permission_ids": ["datastore.table.read", "datastore.record.read"] },
+    { "resource_type": "datastore_table", "resource_name": "incidents",
+      "permission_ids": ["datastore.table.read", "datastore.record.read", "datastore.record.write"] }
+  ]}
+}

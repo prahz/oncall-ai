@@ -1,0 +1,13 @@
+{
+  "title": "Sustained High CPU - payment-service (test)",
+  "severity": "medium",
+  "status": "detected",
+  "affected_services": ["payment-service"],
+  "root_cause": "payment-service CPU has been sustained at 91% for over 5 minutes with no recent deployment. Response times are elevated but no errors yet. This directly matches the High CPU runbook symptom profile (sustained CPU above 85%, increased response times, no deploy change).",
+  "blast_radius": "single_service",
+  "triggering_alerts": ["test-cpu-alert-1"],
+  "on_call_engineer": "priya@company.com",
+  "confidence_score": 0.92,
+  "matched_runbook_id": "925432a9-7c75-4c62-b40d-db969ea08ebc",
+  "correlation_group_id": "CG-TEST-MEDIUM-001"
+}
