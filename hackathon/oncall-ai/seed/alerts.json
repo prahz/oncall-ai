@@ -1,0 +1,112 @@
+[
+    {
+        "source":  "datadog",
+        "service":  "payment-service",
+        "metric":  "latency",
+        "severity":  "critical",
+        "current_value":  6200,
+        "threshold_breached":  2000,
+        "status":  "new",
+        "timestamp":  "2026-06-27T17:43:48Z",
+        "message":  "payment-service P99 latency exceeded 6200ms, threshold 2000ms"
+    },
+    {
+        "source":  "datadog",
+        "service":  "payment-service",
+        "metric":  "error_rate",
+        "severity":  "critical",
+        "current_value":  0.34,
+        "threshold_breached":  0.05,
+        "status":  "new",
+        "timestamp":  "2026-06-27T17:44:48Z",
+        "message":  "payment-service error rate at 34% (0.34), threshold 5% (0.05)"
+    },
+    {
+        "source":  "cloudwatch",
+        "service":  "payment-service",
+        "metric":  "db_connections",
+        "severity":  "high",
+        "current_value":  498,
+        "threshold_breached":  450,
+        "status":  "new",
+        "timestamp":  "2026-06-27T17:45:48Z",
+        "message":  "DB connection pool at 498/500 - near exhaustion"
+    },
+    {
+        "source":  "grafana",
+        "service":  "api-gateway",
+        "metric":  "latency",
+        "severity":  "high",
+        "current_value":  3100,
+        "threshold_breached":  1000,
+        "status":  "new",
+        "timestamp":  "2026-06-27T17:45:48Z",
+        "message":  "api-gateway latency 3100ms exceeded threshold 1000ms"
+    },
+    {
+        "source":  "datadog",
+        "service":  "payment-service",
+        "metric":  "cpu",
+        "severity":  "medium",
+        "current_value":  0.91,
+        "threshold_breached":  0.8,
+        "status":  "new",
+        "timestamp":  "2026-06-27T17:46:48Z",
+        "message":  "payment-service CPU at 91% sustained, threshold 80%"
+    },
+    {
+        "source":  "cloudwatch",
+        "service":  "auth-service",
+        "metric":  "error_rate",
+        "severity":  "medium",
+        "current_value":  0.12,
+        "threshold_breached":  0.05,
+        "status":  "new",
+        "timestamp":  "2026-06-27T17:47:48Z",
+        "message":  "auth-service error rate at 12% (0.12), threshold 5%"
+    },
+    {
+        "source":  "datadog",
+        "service":  "payment-service",
+        "metric":  "latency",
+        "severity":  "critical",
+        "current_value":  6800,
+        "threshold_breached":  2000,
+        "status":  "new",
+        "timestamp":  "2026-06-27T17:48:48Z",
+        "message":  "payment-service P99 latency exceeded 6800ms, threshold 2000ms"
+    },
+    {
+        "source":  "grafana",
+        "service":  "notification-svc",
+        "metric":  "queue_depth",
+        "severity":  "low",
+        "current_value":  12000,
+        "threshold_breached":  5000,
+        "status":  "new",
+        "timestamp":  "2026-06-27T17:49:48Z",
+        "message":  "notification-svc queue depth at 12000 messages, threshold 5000"
+    },
+    {
+        "source":  "datadog",
+        "service":  "payment-service",
+        "metric":  "memory",
+        "severity":  "medium",
+        "current_value":  0.88,
+        "threshold_breached":  0.75,
+        "status":  "new",
+        "timestamp":  "2026-06-27T17:50:48Z",
+        "message":  "payment-service memory at 88%, threshold 75%"
+    },
+    {
+        "source":  "custom",
+        "service":  "infra",
+        "metric":  "disk_io",
+        "severity":  "low",
+        "current_value":  0.95,
+        "threshold_breached":  0.85,
+        "status":  "new",
+        "timestamp":  "2026-06-27T17:52:48Z",
+        "message":  "infra disk I/O utilization at 95%, threshold 85%"
+    }
+]

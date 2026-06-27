@@ -1,0 +1,15 @@
+{
+  "name": "runbooks",
+  "primary_key_column": "id",
+  "enable_rls": false,
+  "columns": [
+    { "name": "title", "type": "TEXT", "required": true, "description": "Short name of this runbook" },
+    { "name": "service", "type": "TEXT", "required": true, "description": "Which service this runbook applies to" },
+    { "name": "symptoms", "type": "TEXT", "max_length": 4000, "description": "Markdown describing what the problem looks like" },
+    { "name": "steps", "type": "TEXT", "max_length": 8000, "description": "Markdown step-by-step resolution instructions" },
+    { "name": "last_used", "type": "DATETIME", "description": "Nullable" },
+    { "name": "success_rate", "type": "FLOAT", "description": "0.0 to 1.0 — percentage of times this runbook resolved the issue" },
+    { "name": "auto_remediation_safe", "type": "BOOLEAN", "description": "Whether the AI agent is allowed to auto-execute this runbook" }
+  ],
+  "config": {}
+}

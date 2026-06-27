@@ -1,0 +1,15 @@
+{
+  "name": "post_mortems",
+  "primary_key_column": "id",
+  "enable_rls": false,
+  "columns": [
+    { "name": "incident_id", "type": "UUID", "required": true, "foreign_key": { "references": "incidents.id" }, "description": "Foreign key -> incidents.id" },
+    { "name": "timeline", "type": "JSON", "description": "Structured array of timestamped events" },
+    { "name": "root_cause_summary", "type": "TEXT", "max_length": 4000, "description": "Plain-language root cause" },
+    { "name": "impact_assessment", "type": "TEXT", "max_length": 4000, "description": "Services affected, duration, estimated user impact" },
+    { "name": "lessons_learned", "type": "TEXT", "max_length": 4000, "description": "What the team should do differently" },
+    { "name": "action_items", "type": "JSON", "description": "Array of follow-up task objects with owner and due date" },
+    { "name": "status", "type": "ENUM", "required": true, "options": ["draft", "pending_review", "approved", "published"] }
+  ],
+  "config": {}
+}

@@ -1,0 +1,18 @@
+{
+  "name": "alerts",
+  "primary_key_column": "id",
+  "enable_rls": false,
+  "columns": [
+    { "name": "source", "type": "TEXT", "required": true, "description": "One of: datadog, grafana, cloudwatch, custom" },
+    { "name": "severity", "type": "ENUM", "required": true, "options": ["critical", "high", "medium", "low"] },
+    { "name": "message", "type": "TEXT", "required": true, "max_length": 2000, "description": "Raw alert message text" },
+    { "name": "service", "type": "TEXT", "required": true, "description": "Name of the affected microservice" },
+    { "name": "metric", "type": "TEXT", "required": true, "description": "e.g. cpu, memory, error_rate, latency" },
+    { "name": "threshold_breached", "type": "FLOAT", "description": "The configured threshold value" },
+    { "name": "current_value", "type": "FLOAT", "description": "The actual observed value at alert time" },
+    { "name": "timestamp", "type": "DATETIME", "description": "When the alert fired" },
+    { "name": "correlation_group", "type": "TEXT", "description": "Nullable. Set by the alert_correlator agent to group related alerts" },
+    { "name": "status", "type": "ENUM", "required": true, "default": "new", "options": ["new", "correlated", "triaged", "resolved"] }
+  ],
+  "config": {}
+}

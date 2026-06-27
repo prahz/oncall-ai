@@ -1,0 +1,44 @@
+[
+    {
+        "title":  "DB Connection Pool Exhaustion - payment-service",
+        "severity":  "high",
+        "status":  "resolved",
+        "affected_services":  [
+                                  "payment-service"
+                              ],
+        "root_cause":  "Connection pool exhausted due to a slow query introduced in deploy v2.4.1 that caused connections to hold open for 45+ seconds. Pool hit max capacity (500) within 8 minutes of deploy.",
+        "blast_radius":  "single_service",
+        "triggering_alerts":  [
+                                  "datadog:payment-service:latency",
+                                  "cloudwatch:payment-service:db_connections",
+                                  "datadog:payment-service:error_rate"
+                              ],
+        "on_call_engineer":  "priya@company.com",
+        "started_at":  "2026-06-13T02:30:00Z",
+        "mitigated_at":  "2026-06-13T02:51:00Z",
+        "resolved_at":  "2026-06-13T03:10:00Z"
+    },
+    {
+        "title":  "API Gateway Latency Spike - cascading from auth-service timeout",
+        "severity":  "critical",
+        "status":  "resolved",
+        "affected_services":  [
+                                  "api-gateway",
+                                  "auth-service",
+                                  "payment-service"
+                              ],
+        "root_cause":  "auth-service token validation endpoint introduced a synchronous external call to a third-party KYC provider in deploy v3.1.0. Provider had degraded performance. Every API request blocked waiting for auth. Latency cascaded to api-gateway and payment-service within 4 minutes.",
+        "blast_radius":  "multi_service",
+        "triggering_alerts":  [
+                                  "grafana:api-gateway:latency",
+                                  "cloudwatch:auth-service:error_rate",
+                                  "datadog:payment-service:latency",
+                                  "datadog:api-gateway:error_rate",
+                                  "grafana:auth-service:latency"
+                              ],
+        "on_call_engineer":  "james@company.com",
+        "started_at":  "2026-05-28T23:15:00Z",
+        "mitigated_at":  "2026-05-28T23:44:00Z",
+        "resolved_at":  "2026-05-29T00:02:00Z"
+    }
+]

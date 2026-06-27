@@ -1,0 +1,19 @@
+{
+  "name": "incidents",
+  "primary_key_column": "id",
+  "enable_rls": false,
+  "columns": [
+    { "name": "title", "type": "TEXT", "required": true, "max_length": 300, "description": "Auto-generated description e.g. \"High latency on payment-service\"" },
+    { "name": "severity", "type": "ENUM", "required": true, "options": ["critical", "high", "medium", "low"] },
+    { "name": "status", "type": "ENUM", "required": true, "options": ["detected", "triaging", "mitigating", "resolved", "post_mortem_pending"] },
+    { "name": "affected_services", "type": "JSON", "description": "Array of service name strings" },
+    { "name": "root_cause", "type": "TEXT", "max_length": 4000, "description": "AI-analyzed root cause, nullable until analyzed" },
+    { "name": "blast_radius", "type": "ENUM", "options": ["single_service", "multi_service", "infrastructure"] },
+    { "name": "triggering_alerts", "type": "JSON", "description": "Array of alert IDs that created this incident" },
+    { "name": "on_call_engineer", "type": "TEXT", "description": "Assigned engineer's name or email" },
+    { "name": "started_at", "type": "DATETIME" },
+    { "name": "mitigated_at", "type": "DATETIME", "description": "Nullable" },
+    { "name": "resolved_at", "type": "DATETIME", "description": "Nullable" }
+  ],
+  "config": {}
+}

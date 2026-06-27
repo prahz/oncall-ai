@@ -1,0 +1,12 @@
+{
+  "name": "on_call_schedule",
+  "primary_key_column": "id",
+  "enable_rls": false,
+  "columns": [
+    { "name": "engineer", "type": "TEXT", "required": true, "description": "Full name or email" },
+    { "name": "start_time", "type": "DATETIME", "required": true, "description": "Start of on-call shift" },
+    { "name": "end_time", "type": "DATETIME", "required": true, "description": "End of on-call shift" },
+    { "name": "timezone", "type": "TEXT", "description": "e.g. \"America/New_York\", \"Asia/Kolkata\"" }
+  ],
+  "config": {}
+}

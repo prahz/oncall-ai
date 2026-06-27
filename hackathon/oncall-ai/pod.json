@@ -1,0 +1,5 @@
+{
+  "name": "oncall-ai",
+  "description": "ONCALL AI — autonomous incident response platform for SRE/DevOps teams. Ingests alerts, correlates them into incidents, suggests/auto-executes remediation, and writes post-mortems.",
+  "format_version": 1
+}

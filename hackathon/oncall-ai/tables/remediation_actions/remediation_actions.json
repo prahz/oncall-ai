@@ -1,0 +1,16 @@
+{
+  "name": "remediation_actions",
+  "primary_key_column": "id",
+  "enable_rls": false,
+  "columns": [
+    { "name": "incident_id", "type": "UUID", "required": true, "foreign_key": { "references": "incidents.id" }, "description": "Foreign key -> incidents.id" },
+    { "name": "action_type", "type": "ENUM", "required": true, "options": ["restart_service", "scale_up", "rollback_deploy", "clear_cache", "notify_team", "manual_fix_required"] },
+    { "name": "description", "type": "TEXT", "max_length": 2000, "description": "Human-readable explanation of the action" },
+    { "name": "confidence", "type": "FLOAT", "description": "0.0 to 1.0 — AI confidence score" },
+    { "name": "auto_approved", "type": "BOOLEAN", "description": "True only if confidence > 0.9 and runbook is safe" },
+    { "name": "status", "type": "ENUM", "required": true, "options": ["pending_approval", "approved", "executed", "failed", "rejected"] },
+    { "name": "executed_by", "type": "TEXT", "description": "Either \"agent\" or a human's email address" },
+    { "name": "result", "type": "TEXT", "max_length": 4000, "description": "Nullable. Output after execution" }
+  ],
+  "config": {}
+}

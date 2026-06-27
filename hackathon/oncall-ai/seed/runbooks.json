@@ -1,0 +1,26 @@
+[
+    {
+        "title":  "DB Connection Pool Exhaustion",
+        "service":  "payment-service",
+        "symptoms":  "- DB connection count \u003e 90% of pool size\r\n- Latency spike on payment-service\r\n- Error logs show \"connection timeout\" or \"pool exhausted\"",
+        "steps":  "1. Check current connection count: `SELECT count(*) FROM pg_stat_activity`\r\n2. Identify long-running queries: `SELECT pid, query, now() - pg_stat_activity.query_start AS duration FROM pg_stat_activity WHERE state = \u0027active\u0027 ORDER BY duration DESC`\r\n3. Kill blocking queries if safe: `SELECT pg_terminate_backend(pid)`\r\n4. Scale up connection pool limit in app config\r\n5. Restart payment-service with `kubectl rollout restart deployment/payment-service`\r\n6. Verify latency returns to normal within 2 minutes",
+        "success_rate":  0.87,
+        "auto_remediation_safe":  true
+    },
+    {
+        "title":  "High CPU - Scale Up",
+        "service":  "payment-service",
+        "symptoms":  "- CPU sustained above 85% for 5+ minutes\r\n- Increased response times\r\n- No recent deployment changes",
+        "steps":  "1. Confirm CPU spike is sustained, not transient: check last 15 min graph\r\n2. Check for any runaway processes: `kubectl top pods -n production`\r\n3. Scale up replica count: `kubectl scale deployment/payment-service --replicas=6`\r\n4. Monitor CPU for next 5 minutes\r\n5. If CPU doesn\u0027t drop, escalate to SRE lead",
+        "success_rate":  0.79,
+        "auto_remediation_safe":  true
+    },
+    {
+        "title":  "Emergency Rollback - Bad Deploy",
+        "service":  "all-services",
+        "symptoms":  "- Error rate spike immediately following a deployment\r\n- Multiple services showing degraded health\r\n- Blast radius: multi-service or infrastructure",
+        "steps":  "1. Identify the most recent deployment: `kubectl rollout history deployment`\r\n2. Confirm error spike correlates with deploy timestamp\r\n3. Rollback: `kubectl rollout undo deployment/\u003cservice-name\u003e`\r\n4. Verify rollback completes: `kubectl rollout status deployment/\u003cservice-name\u003e`\r\n5. Confirm error rate drops within 3 minutes\r\n6. Notify team in #incidents channel",
+        "success_rate":  0.94,
+        "auto_remediation_safe":  false
+    }
+]
