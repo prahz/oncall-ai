@@ -1,0 +1,115 @@
+{
+  "name": "incident_closure_pipeline",
+  "description": "Workflow 3 — fires when an incident transitions to resolved. Waits for stabilization, confirms still-resolved (loop guard), generates a post-mortem, sets post_mortem_pending, then a team-lead approval gate publishes or requests edits.",
+  "start": { "type": "DATASTORE_EVENT", "config": { "table_name": "incidents", "operations": ["INSERT", "UPDATE"] } },
+  "nodes": [
+    { "id": "guard_resolved", "type": "DECISION", "label": "Only proceed when status=resolved (prevents re-trigger loop)",
+      "config": { "rules": [ { "condition": "start.payload.status == 'resolved'", "next_node_id": "stabilization_wait" } ] } },
+
+    { "id": "stabilization_wait", "type": "WAIT_UNTIL", "label": "Stabilization wait (10s test; 10min real)",
+      "config": { "timeout_seconds": 10 } },
+
+    { "id": "confirm_read", "type": "FUNCTION", "label": "Read current incident status",
+      "config": { "function_name": "get_incident_status",
+        "input_mapping": { "incident_id": { "type": "expression", "value": "start.metadata.record_id" } } } },
+
+    { "id": "confirm_still_resolved", "type": "DECISION", "label": "Still resolved?",
+      "config": { "rules": [ { "condition": "confirm_read.status == 'resolved'", "next_node_id": "generate_post_mortem" } ] } },
+
+    { "id": "abort_closure", "type": "FUNCTION", "label": "Abort closure (no longer resolved)",
+      "config": { "function_name": "send_notification",
+        "input_mapping": {
+          "template": { "type": "literal", "value": "SYSTEM_LOG" },
+          "incident_id": { "type": "expression", "value": "start.metadata.record_id" },
+          "message": { "type": "literal", "value": "Incident is no longer resolved after stabilization wait — closure pipeline aborted." } } } },
+
+    { "id": "generate_post_mortem", "type": "AGENT", "label": "Generate post-mortem",
+      "config": { "agent_name": "post_mortem_writer",
+        "input_mapping": {
+          "incident_id": { "type": "expression", "value": "start.metadata.record_id" },
+          "instruction": { "type": "literal", "value": "Write a post-mortem for the given resolved incident_id. Check for an existing post-mortem first to avoid duplicates. Create one post_mortems row with all five sections and status draft." } } } },
+
+    { "id": "update_incident_post_mortem_pending", "type": "FUNCTION", "label": "Incident -> post_mortem_pending",
+      "config": { "function_name": "set_incident_status",
+        "input_mapping": {
+          "incident_id": { "type": "expression", "value": "start.metadata.record_id" },
+          "status": { "type": "literal", "value": "post_mortem_pending" } } } },
+
+    { "id": "notify_slack_post_mortem_ready", "type": "FUNCTION", "label": "Notify: post-mortem ready for review",
+      "config": { "function_name": "send_notification",
+        "input_mapping": {
+          "template": { "type": "literal", "value": "POST_MORTEM_REVIEW_REQUEST" },
+          "incident_id": { "type": "expression", "value": "start.metadata.record_id" },
+          "post_mortem_id": { "type": "expression", "value": "generate_post_mortem.post_mortem_id" },
+          "incident_title": { "type": "expression", "value": "start.payload.title", "optional": true },
+          "assigned_reviewer": { "type": "literal", "value": "sre-lead@company.com" },
+          "message": { "type": "literal", "value": "Post-mortem draft is ready for your review." } } } },
+
+    { "id": "post_mortem_approval_gate", "type": "FORM", "label": "Review Post-Mortem",
+      "config": {
+        "assignee_pod_member_id": "019f0a2f-d77a-77a5-9c85-011f28a5661a",
+        "input_schema": { "type": "object",
+          "properties": { "decision": { "type": "string", "enum": ["approved", "edit_requested"] }, "notes": { "type": "string" } },
+          "required": ["decision"] },
+        "ui_schema": { "ui:order": ["decision", "notes"] } } },
+
+    { "id": "pm_decision", "type": "DECISION", "label": "Publish or request edits?",
+      "config": { "rules": [
+        { "condition": "post_mortem_approval_gate.decision == 'approved'", "next_node_id": "publish_post_mortem" },
+        { "condition": "post_mortem_approval_gate.decision == 'edit_requested'", "next_node_id": "notify_slack_edits_requested" } ] } },
+
+    { "id": "publish_post_mortem", "type": "FUNCTION", "label": "Publish post-mortem",
+      "config": { "function_name": "set_post_mortem_status",
+        "input_mapping": {
+          "post_mortem_id": { "type": "expression", "value": "generate_post_mortem.post_mortem_id" },
+          "status": { "type": "literal", "value": "published" } } } },
+
+    { "id": "update_runbook_success_rate", "type": "FUNCTION", "label": "Update runbook success rate (stub)",
+      "config": { "function_name": "update_runbook_success_rate",
+        "input_mapping": {
+          "incident_id": { "type": "expression", "value": "start.metadata.record_id" },
+          "matched_runbook_id": { "type": "expression", "value": "start.payload.matched_runbook_id", "optional": true },
+          "was_successful": { "type": "literal", "value": true } } } },
+
+    { "id": "notify_slack_post_mortem_published", "type": "FUNCTION", "label": "Notify: post-mortem published",
+      "config": { "function_name": "send_notification",
+        "input_mapping": {
+          "template": { "type": "literal", "value": "POST_MORTEM_PUBLISHED" },
+          "incident_id": { "type": "expression", "value": "start.metadata.record_id" },
+          "post_mortem_id": { "type": "expression", "value": "generate_post_mortem.post_mortem_id" },
+          "message": { "type": "literal", "value": "Post-mortem published. Runbook success rate updated." } } } },
+
+    { "id": "notify_slack_edits_requested", "type": "FUNCTION", "label": "Notify: edits requested",
+      "config": { "function_name": "send_notification",
+        "input_mapping": {
+          "template": { "type": "literal", "value": "POST_MORTEM_EDITS_REQUESTED" },
+          "post_mortem_id": { "type": "expression", "value": "generate_post_mortem.post_mortem_id" },
+          "message": { "type": "literal", "value": "Post-mortem edits requested by reviewer. Please update and re-submit for approval." } } } },
+
+    { "id": "end_skip", "type": "END", "label": "Skipped (not a resolved transition)" },
+    { "id": "end_aborted", "type": "END", "label": "Done (closure aborted)" },
+    { "id": "end_published", "type": "END", "label": "Done (published)" },
+    { "id": "end_edits", "type": "END", "label": "Done (edits requested)" },
+    { "id": "end_unhandled", "type": "END", "label": "Done (no matching decision)" }
+  ],
+  "edges": [
+    { "id": "e_guard_skip", "source": "guard_resolved", "target": "end_skip", "label": "default: not resolved" },
+    { "id": "e_guard_wait", "source": "guard_resolved", "target": "stabilization_wait", "label": "resolved" },
+    { "id": "e_wait_read", "source": "stabilization_wait", "target": "confirm_read" },
+    { "id": "e_read_confirm", "source": "confirm_read", "target": "confirm_still_resolved" },
+    { "id": "e_confirm_abort", "source": "confirm_still_resolved", "target": "abort_closure", "label": "default: not resolved" },
+    { "id": "e_confirm_pm", "source": "confirm_still_resolved", "target": "generate_post_mortem", "label": "still resolved" },
+    { "id": "e_abort_end", "source": "abort_closure", "target": "end_aborted" },
+    { "id": "e_pm_pending", "source": "generate_post_mortem", "target": "update_incident_post_mortem_pending" },
+    { "id": "e_pending_notify", "source": "update_incident_post_mortem_pending", "target": "notify_slack_post_mortem_ready" },
+    { "id": "e_notify_gate", "source": "notify_slack_post_mortem_ready", "target": "post_mortem_approval_gate" },
+    { "id": "e_gate_dec", "source": "post_mortem_approval_gate", "target": "pm_decision" },
+    { "id": "e_pmdec_unhandled", "source": "pm_decision", "target": "end_unhandled", "label": "default: no matching decision" },
+    { "id": "e_pmdec_pub", "source": "pm_decision", "target": "publish_post_mortem", "label": "approved" },
+    { "id": "e_pmdec_edit", "source": "pm_decision", "target": "notify_slack_edits_requested", "label": "edit_requested" },
+    { "id": "e_pub_rate", "source": "publish_post_mortem", "target": "update_runbook_success_rate" },
+    { "id": "e_rate_notify", "source": "update_runbook_success_rate", "target": "notify_slack_post_mortem_published" },
+    { "id": "e_pub_end", "source": "notify_slack_post_mortem_published", "target": "end_published" },
+    { "id": "e_edits_end", "source": "notify_slack_edits_requested", "target": "end_edits" }
+  ]
+}

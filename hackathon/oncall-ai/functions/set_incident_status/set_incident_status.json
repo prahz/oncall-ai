@@ -1,0 +1,10 @@
+{
+  "name": "set_incident_status",
+  "description": "Update an incident's status (and optionally severity/blast_radius), stamping mitigated_at/resolved_at when requested. Backs the workflow table_update nodes on incidents.",
+  "type": "API",
+  "code": { "$file": "code.py" },
+  "permissions": { "grants": [
+    { "resource_type": "datastore_table", "resource_name": "incidents",
+      "permission_ids": ["datastore.table.read", "datastore.record.read", "datastore.record.write"] }
+  ]}
+}

@@ -1,0 +1,10 @@
+{
+  "name": "set_post_mortem_status",
+  "description": "Update a post_mortems row's status (e.g. published). Backs the publish_post_mortem node.",
+  "type": "API",
+  "code": { "$file": "code.py" },
+  "permissions": { "grants": [
+    { "resource_type": "datastore_table", "resource_name": "post_mortems",
+      "permission_ids": ["datastore.table.read", "datastore.record.read", "datastore.record.write"] }
+  ]}
+}

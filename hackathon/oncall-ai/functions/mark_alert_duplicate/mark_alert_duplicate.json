@@ -1,0 +1,10 @@
+{
+  "name": "mark_alert_duplicate",
+  "description": "Mark an alert as a duplicate: set status=correlated, link correlation_group to the original, and append a note to the message. Backs the mark_duplicate node.",
+  "type": "API",
+  "code": { "$file": "code.py" },
+  "permissions": { "grants": [
+    { "resource_type": "datastore_table", "resource_name": "alerts",
+      "permission_ids": ["datastore.table.read", "datastore.record.read", "datastore.record.write"] }
+  ]}
+}

@@ -1,0 +1,10 @@
+{
+  "name": "approve_top_remediation",
+  "description": "Approve the highest-confidence pending_approval remediation_action for an incident (records approver). Setting status=approved fires the auto_remediation_workflow DATASTORE trigger. Backs the trigger_auto_remediation_workflow node.",
+  "type": "API",
+  "code": { "$file": "code.py" },
+  "permissions": { "grants": [
+    { "resource_type": "datastore_table", "resource_name": "remediation_actions",
+      "permission_ids": ["datastore.table.read", "datastore.record.read", "datastore.record.write"] }
+  ]}
+}

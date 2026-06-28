@@ -1,0 +1,10 @@
+{
+  "name": "execute_remediation_action",
+  "description": "STUB (Day 4 = real kubectl/API simulation). Pick the top approved action for an incident and return simulated execution output.",
+  "type": "API",
+  "code": { "$file": "code.py" },
+  "permissions": { "grants": [
+    { "resource_type": "datastore_table", "resource_name": "remediation_actions",
+      "permission_ids": ["datastore.table.read", "datastore.record.read"] }
+  ]}
+}

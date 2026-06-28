@@ -1,0 +1,10 @@
+{
+  "name": "reject_pending_remediations",
+  "description": "Mark all pending_approval remediation_actions for an incident as rejected (records the approver). Backs the mark_remediation_rejected node.",
+  "type": "API",
+  "code": { "$file": "code.py" },
+  "permissions": { "grants": [
+    { "resource_type": "datastore_table", "resource_name": "remediation_actions",
+      "permission_ids": ["datastore.table.read", "datastore.record.read", "datastore.record.write"] }
+  ]}
+}

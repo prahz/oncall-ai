@@ -1,0 +1,10 @@
+{
+  "name": "get_incident_status",
+  "description": "Read an incident's current status (used by the closure pipeline to confirm it's still resolved after the stabilization wait).",
+  "type": "API",
+  "code": { "$file": "code.py" },
+  "permissions": { "grants": [
+    { "resource_type": "datastore_table", "resource_name": "incidents",
+      "permission_ids": ["datastore.table.read", "datastore.record.read"] }
+  ]}
+}

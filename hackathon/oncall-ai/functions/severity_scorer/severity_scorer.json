@@ -1,0 +1,6 @@
+{
+  "name": "severity_scorer",
+  "description": "STUB (Day 4 = full scoring matrix). Promote severity one level for multi_service, two for infrastructure.",
+  "type": "API",
+  "code": { "$file": "code.py" }
+}

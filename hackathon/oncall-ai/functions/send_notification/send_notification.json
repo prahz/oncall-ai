@@ -1,0 +1,10 @@
+{
+  "name": "send_notification",
+  "description": "STUB Slack notifier (Day 4 = real Slack). Renders one of the 9 named templates and logs it to the notifications table so workflow notification nodes are observable today.",
+  "type": "API",
+  "code": { "$file": "code.py" },
+  "permissions": { "grants": [
+    { "resource_type": "datastore_table", "resource_name": "notifications",
+      "permission_ids": ["datastore.table.read", "datastore.record.read", "datastore.record.write"] }
+  ]}
+}

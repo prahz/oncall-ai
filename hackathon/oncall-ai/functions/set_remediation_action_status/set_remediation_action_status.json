@@ -1,0 +1,10 @@
+{
+  "name": "set_remediation_action_status",
+  "description": "Update a single remediation_action's status, result, and executed_by. Backs the executed/failed table_update nodes.",
+  "type": "API",
+  "code": { "$file": "code.py" },
+  "permissions": { "grants": [
+    { "resource_type": "datastore_table", "resource_name": "remediation_actions",
+      "permission_ids": ["datastore.table.read", "datastore.record.read", "datastore.record.write"] }
+  ]}
+}

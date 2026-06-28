@@ -1,0 +1,11 @@
+{
+    "source":  "datadog",
+    "service":  "payment-service",
+    "metric":  "latency",
+    "severity":  "critical",
+    "current_value":  7200,
+    "threshold_breached":  2000,
+    "status":  "new",
+    "timestamp":  "2026-06-28T09:14:58Z",
+    "message":  "payment-service P99 latency exceeded 7200ms, threshold 2000ms (Day3 Test A)"
+}

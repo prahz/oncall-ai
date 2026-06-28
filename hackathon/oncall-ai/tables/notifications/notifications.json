@@ -1,0 +1,13 @@
+{
+  "name": "notifications",
+  "primary_key_column": "id",
+  "enable_rls": false,
+  "columns": [
+    { "name": "template", "type": "TEXT", "required": true, "description": "Slack template name (Day 4 wires these to real Slack)" },
+    { "name": "channel", "type": "TEXT", "default": "slack", "description": "Destination channel (stub: logged only today)" },
+    { "name": "incident_id", "type": "TEXT", "description": "Related incident id, if any" },
+    { "name": "body", "type": "TEXT", "max_length": 4000, "description": "Rendered notification text" },
+    { "name": "payload", "type": "JSON", "description": "Structured payload passed to the template" }
+  ],
+  "config": {}
+}

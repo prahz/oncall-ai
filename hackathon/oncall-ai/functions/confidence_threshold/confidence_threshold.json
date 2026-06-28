@@ -1,0 +1,6 @@
+{
+  "name": "confidence_threshold",
+  "description": "Auto-approval rule: critical always needs human; otherwise auto only if confidence>=0.9 and runbook is safe.",
+  "type": "API",
+  "code": { "$file": "code.py" }
+}

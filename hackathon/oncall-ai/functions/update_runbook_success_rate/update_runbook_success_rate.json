@@ -1,0 +1,6 @@
+{
+  "name": "update_runbook_success_rate",
+  "description": "STUB (Day 6 learning loop). Returns the existing success_rate unchanged for now.",
+  "type": "API",
+  "code": { "$file": "code.py" }
+}

@@ -1,0 +1,11 @@
+{
+    "source":  "datadog",
+    "service":  "payment-service",
+    "metric":  "error_rate",
+    "severity":  "critical",
+    "current_value":  0.41,
+    "threshold_breached":  0.05,
+    "status":  "new",
+    "timestamp":  "2026-06-28T09:16:33Z",
+    "message":  "payment-service error rate at 41% (0.41), threshold 5% (Day3 Test A)"
+}

@@ -1,0 +1,144 @@
+{
+  "name": "alert_ingestion_pipeline",
+  "description": "Workflow 1 — trigger-driven. New/updated alert (status=new) -> dedup -> correlate -> root cause -> blast radius -> severity -> remediation suggestion -> Slack notify -> human approval gate -> approve/reject/escalate.",
+  "start": { "type": "DATASTORE_EVENT", "config": { "table_name": "alerts", "operations": ["INSERT", "UPDATE"] } },
+  "nodes": [
+    { "id": "guard_new", "type": "DECISION", "label": "Only proceed for status=new (loop guard)",
+      "config": { "rules": [ { "condition": "start.payload.status == 'new'", "next_node_id": "check_duplicate" } ] } },
+
+    { "id": "check_duplicate", "type": "FUNCTION", "label": "Deduplicate alert",
+      "config": { "function_name": "deduplicate_alerts",
+        "input_mapping": { "new_alert_id": { "type": "expression", "value": "start.metadata.record_id" } } } },
+
+    { "id": "dup_decision", "type": "DECISION", "label": "Is duplicate?",
+      "config": { "rules": [ { "condition": "check_duplicate.is_duplicate == `true`", "next_node_id": "mark_duplicate" } ] } },
+
+    { "id": "mark_duplicate", "type": "FUNCTION", "label": "Mark duplicate and link",
+      "config": { "function_name": "mark_alert_duplicate",
+        "input_mapping": {
+          "alert_id": { "type": "expression", "value": "start.metadata.record_id" },
+          "original_id": { "type": "expression", "value": "check_duplicate.original_id" } } } },
+
+    { "id": "run_correlator", "type": "AGENT", "label": "Correlate alerts",
+      "config": { "agent_name": "alert_correlator",
+        "input_mapping": { "instruction": { "type": "literal", "value": "Process all alerts in status 'new' (and recent 'correlated') from the last 15 minutes. Group related ones, write correlation_group and status back, and return your JSON summary." } } } },
+
+    { "id": "analyze_root_cause", "type": "AGENT", "label": "Analyze root cause and create incident",
+      "config": { "agent_name": "root_cause_analyzer",
+        "input_mapping": {
+          "correlation_group_id": { "type": "expression", "value": "run_correlator.groups_created[0].correlation_group_id", "optional": true },
+          "instruction": { "type": "literal", "value": "Analyze the most recently correlated alert group (or the most recent correlated/triaged alerts if no group id is given) and create exactly one incident (status detected) if none exists for it. Always create or return an incident and report its incident_id." } } } },
+
+    { "id": "calculate_blast_radius", "type": "FUNCTION", "label": "Calculate blast radius",
+      "config": { "function_name": "blast_radius_calculator",
+        "input_mapping": { "service": { "type": "expression", "value": "start.payload.service" } } } },
+
+    { "id": "score_severity", "type": "FUNCTION", "label": "Score severity",
+      "config": { "function_name": "severity_scorer",
+        "input_mapping": {
+          "alert_severity": { "type": "expression", "value": "analyze_root_cause.severity" },
+          "blast_radius": { "type": "expression", "value": "calculate_blast_radius.blast_radius" } } } },
+
+    { "id": "update_incident_severity", "type": "FUNCTION", "label": "Update incident severity -> triaging",
+      "config": { "function_name": "set_incident_status",
+        "input_mapping": {
+          "incident_id": { "type": "expression", "value": "analyze_root_cause.incident_id" },
+          "status": { "type": "literal", "value": "triaging" },
+          "severity": { "type": "expression", "value": "score_severity.severity" },
+          "blast_radius": { "type": "expression", "value": "calculate_blast_radius.blast_radius" } } } },
+
+    { "id": "suggest_remediation", "type": "AGENT", "label": "Suggest remediation",
+      "config": { "agent_name": "remediation_suggester",
+        "input_mapping": {
+          "incident_id": { "type": "expression", "value": "analyze_root_cause.incident_id" },
+          "instruction": { "type": "literal", "value": "Propose remediation actions for the given incident_id, score them, apply the auto-approval rule, and write the remediation_actions rows." } } } },
+
+    { "id": "remediation_decision", "type": "DECISION", "label": "Any action auto-approved?",
+      "config": { "rules": [ { "condition": "length(suggest_remediation.actions[?auto_approved == `true`]) > `0`", "next_node_id": "notify_slack_auto_remediation" } ] } },
+
+    { "id": "notify_slack_approval_required", "type": "FUNCTION", "label": "Notify: approval required",
+      "config": { "function_name": "send_notification",
+        "input_mapping": {
+          "template": { "type": "literal", "value": "INCIDENT_ALERT_APPROVAL_REQUIRED" },
+          "incident_id": { "type": "expression", "value": "analyze_root_cause.incident_id" },
+          "severity": { "type": "expression", "value": "score_severity.severity" },
+          "blast_radius": { "type": "expression", "value": "calculate_blast_radius.blast_radius" },
+          "on_call_engineer": { "type": "expression", "value": "analyze_root_cause.on_call_engineer" } } } },
+
+    { "id": "notify_slack_auto_remediation", "type": "FUNCTION", "label": "Notify: auto-remediation eligible",
+      "config": { "function_name": "send_notification",
+        "input_mapping": {
+          "template": { "type": "literal", "value": "INCIDENT_ALERT_AUTO_REMEDIATION" },
+          "incident_id": { "type": "expression", "value": "analyze_root_cause.incident_id" },
+          "severity": { "type": "expression", "value": "score_severity.severity" },
+          "blast_radius": { "type": "expression", "value": "calculate_blast_radius.blast_radius" },
+          "on_call_engineer": { "type": "expression", "value": "analyze_root_cause.on_call_engineer" } } } },
+
+    { "id": "approval_gate", "type": "FORM", "label": "Approve Remediation",
+      "config": {
+        "assignee_pod_member_id": "019f0a2f-d77a-77a5-9c85-011f28a5661a",
+        "input_schema": { "type": "object",
+          "properties": { "decision": { "type": "string", "enum": ["approved", "rejected", "escalated"] }, "notes": { "type": "string" } },
+          "required": ["decision"] },
+        "ui_schema": { "ui:order": ["decision", "notes"] } } },
+
+    { "id": "approval_decision", "type": "DECISION", "label": "Route approval decision",
+      "config": { "rules": [
+        { "condition": "approval_gate.decision == 'approved'", "next_node_id": "trigger_auto_remediation_workflow" },
+        { "condition": "approval_gate.decision == 'rejected'", "next_node_id": "mark_remediation_rejected" },
+        { "condition": "approval_gate.decision == 'escalated'", "next_node_id": "escalate_to_sre_lead" } ] } },
+
+    { "id": "trigger_auto_remediation_workflow", "type": "FUNCTION", "label": "Approve top action (fires auto_remediation_workflow)",
+      "config": { "function_name": "approve_top_remediation",
+        "input_mapping": {
+          "incident_id": { "type": "expression", "value": "analyze_root_cause.incident_id" },
+          "approver_email": { "type": "expression", "value": "analyze_root_cause.on_call_engineer", "optional": true } } } },
+
+    { "id": "mark_remediation_rejected", "type": "FUNCTION", "label": "Mark remediation rejected",
+      "config": { "function_name": "reject_pending_remediations",
+        "input_mapping": {
+          "incident_id": { "type": "expression", "value": "analyze_root_cause.incident_id" },
+          "approver_email": { "type": "literal", "value": "human" } } } },
+
+    { "id": "escalate_to_sre_lead", "type": "FUNCTION", "label": "Escalate to SRE lead",
+      "config": { "function_name": "send_notification",
+        "input_mapping": {
+          "template": { "type": "literal", "value": "ESCALATION_ALERT" },
+          "incident_id": { "type": "expression", "value": "analyze_root_cause.incident_id" },
+          "reason": { "type": "literal", "value": "Approval timeout or manual escalation triggered" },
+          "escalate_to": { "type": "literal", "value": "sre-lead@company.com" } } } },
+
+    { "id": "end_skip", "type": "END", "label": "Skipped (not a new alert)" },
+    { "id": "end_dup", "type": "END", "label": "Done (duplicate)" },
+    { "id": "end_approved", "type": "END", "label": "Done (approved -> auto remediation)" },
+    { "id": "end_rejected", "type": "END", "label": "Done (rejected)" },
+    { "id": "end_escalated", "type": "END", "label": "Done (escalated)" },
+    { "id": "end_unhandled", "type": "END", "label": "Done (no matching decision)" }
+  ],
+  "edges": [
+    { "id": "e_guard_skip", "source": "guard_new", "target": "end_skip", "label": "default: not new" },
+    { "id": "e_guard_dup", "source": "guard_new", "target": "check_duplicate", "label": "new" },
+    { "id": "e_check_dec", "source": "check_duplicate", "target": "dup_decision" },
+    { "id": "e_dup_corr", "source": "dup_decision", "target": "run_correlator", "label": "default: not duplicate" },
+    { "id": "e_dup_mark", "source": "dup_decision", "target": "mark_duplicate", "label": "duplicate" },
+    { "id": "e_mark_end", "source": "mark_duplicate", "target": "end_dup" },
+    { "id": "e_corr_rca", "source": "run_correlator", "target": "analyze_root_cause" },
+    { "id": "e_rca_blast", "source": "analyze_root_cause", "target": "calculate_blast_radius" },
+    { "id": "e_blast_sev", "source": "calculate_blast_radius", "target": "score_severity" },
+    { "id": "e_sev_upd", "source": "score_severity", "target": "update_incident_severity" },
+    { "id": "e_upd_sug", "source": "update_incident_severity", "target": "suggest_remediation" },
+    { "id": "e_sug_dec", "source": "suggest_remediation", "target": "remediation_decision" },
+    { "id": "e_dec_appr", "source": "remediation_decision", "target": "notify_slack_approval_required", "label": "default: needs approval" },
+    { "id": "e_dec_auto", "source": "remediation_decision", "target": "notify_slack_auto_remediation", "label": "auto-eligible" },
+    { "id": "e_napprove_gate", "source": "notify_slack_approval_required", "target": "approval_gate" },
+    { "id": "e_nauto_gate", "source": "notify_slack_auto_remediation", "target": "approval_gate" },
+    { "id": "e_gate_dec", "source": "approval_gate", "target": "approval_decision" },
+    { "id": "e_adec_unhandled", "source": "approval_decision", "target": "end_unhandled", "label": "default: no matching decision" },
+    { "id": "e_adec_appr", "source": "approval_decision", "target": "trigger_auto_remediation_workflow", "label": "approved" },
+    { "id": "e_adec_rej", "source": "approval_decision", "target": "mark_remediation_rejected", "label": "rejected" },
+    { "id": "e_adec_esc", "source": "approval_decision", "target": "escalate_to_sre_lead", "label": "escalated" },
+    { "id": "e_trig_end", "source": "trigger_auto_remediation_workflow", "target": "end_approved" },
+    { "id": "e_rej_end", "source": "mark_remediation_rejected", "target": "end_rejected" },
+    { "id": "e_esc_end", "source": "escalate_to_sre_lead", "target": "end_escalated" }
+  ]
+}

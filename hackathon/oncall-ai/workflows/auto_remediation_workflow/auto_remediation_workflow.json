@@ -1,0 +1,117 @@
+{
+  "name": "auto_remediation_workflow",
+  "description": "Workflow 2 — fires when a remediation_action becomes 'approved' (auto path on INSERT of an auto-approved action, or human-approved path when Workflow 1 sets it approved). Executes the action, marks the incident mitigating, waits, runs a health check, then resolves or escalates.",
+  "start": { "type": "DATASTORE_EVENT", "config": { "table_name": "remediation_actions", "operations": ["INSERT", "UPDATE"] } },
+  "nodes": [
+    { "id": "guard_approved", "type": "DECISION", "label": "Only proceed for approved actions (loop guard)",
+      "config": { "rules": [ { "condition": "start.payload.status == 'approved'", "next_node_id": "execute_remediation" } ] } },
+
+    { "id": "execute_remediation", "type": "FUNCTION", "label": "Execute remediation (simulated)",
+      "config": { "function_name": "execute_remediation_action",
+        "input_mapping": { "incident_id": { "type": "expression", "value": "start.payload.incident_id" } } } },
+
+    { "id": "exec_decision", "type": "DECISION", "label": "Execution succeeded?",
+      "config": { "rules": [ { "condition": "execute_remediation.success == `true`", "next_node_id": "update_action_executed" } ] } },
+
+    { "id": "update_action_executed", "type": "FUNCTION", "label": "Mark action executed",
+      "config": { "function_name": "set_remediation_action_status",
+        "input_mapping": {
+          "action_id": { "type": "expression", "value": "execute_remediation.action_id" },
+          "status": { "type": "literal", "value": "executed" },
+          "executed_by": { "type": "literal", "value": "agent" },
+          "result": { "type": "expression", "value": "execute_remediation.output" } } } },
+
+    { "id": "update_action_failed", "type": "FUNCTION", "label": "Mark action failed",
+      "config": { "function_name": "set_remediation_action_status",
+        "input_mapping": {
+          "action_id": { "type": "expression", "value": "execute_remediation.action_id" },
+          "status": { "type": "literal", "value": "failed" },
+          "result": { "type": "literal", "value": "Execution failed — see logs" } } } },
+
+    { "id": "update_incident_mitigating", "type": "FUNCTION", "label": "Incident -> mitigating",
+      "config": { "function_name": "set_incident_status",
+        "input_mapping": {
+          "incident_id": { "type": "expression", "value": "start.payload.incident_id" },
+          "status": { "type": "literal", "value": "mitigating" },
+          "stamp_mitigated": { "type": "literal", "value": true } } } },
+
+    { "id": "wait_for_stabilization", "type": "WAIT_UNTIL", "label": "Stabilization wait (10s test; 2min real)",
+      "config": { "timeout_seconds": 10 } },
+
+    { "id": "run_health_check", "type": "FUNCTION", "label": "Verify health check",
+      "config": { "function_name": "verify_health_check",
+        "input_mapping": { "incident_id": { "type": "expression", "value": "start.payload.incident_id" } } } },
+
+    { "id": "health_decision", "type": "DECISION", "label": "Healthy?",
+      "config": { "rules": [ { "condition": "run_health_check.healthy == `true`", "next_node_id": "resolve_incident" } ] } },
+
+    { "id": "resolve_incident", "type": "FUNCTION", "label": "Incident -> resolved",
+      "config": { "function_name": "set_incident_status",
+        "input_mapping": {
+          "incident_id": { "type": "expression", "value": "start.payload.incident_id" },
+          "status": { "type": "literal", "value": "resolved" },
+          "stamp_resolved": { "type": "literal", "value": true } } } },
+
+    { "id": "notify_slack_resolved", "type": "FUNCTION", "label": "Notify: resolved",
+      "config": { "function_name": "send_notification",
+        "input_mapping": {
+          "template": { "type": "literal", "value": "INCIDENT_RESOLVED" },
+          "incident_id": { "type": "expression", "value": "start.payload.incident_id" },
+          "message": { "type": "literal", "value": "Incident resolved after auto-remediation. Post-mortem will be generated shortly." } } } },
+
+    { "id": "notify_slack_remediation_failed", "type": "FUNCTION", "label": "Notify: remediation failed (health check)",
+      "config": { "function_name": "send_notification",
+        "input_mapping": {
+          "template": { "type": "literal", "value": "REMEDIATION_FAILED" },
+          "incident_id": { "type": "expression", "value": "start.payload.incident_id" },
+          "reason": { "type": "expression", "value": "run_health_check.reason" },
+          "message": { "type": "literal", "value": "Auto-remediation executed but health check failed. Human intervention required." } } } },
+
+    { "id": "escalate_to_human", "type": "FUNCTION", "label": "Incident -> triaging (escalate)",
+      "config": { "function_name": "set_incident_status",
+        "input_mapping": {
+          "incident_id": { "type": "expression", "value": "start.payload.incident_id" },
+          "status": { "type": "literal", "value": "triaging" } } } },
+
+    { "id": "notify_escalation", "type": "FUNCTION", "label": "Notify: escalation",
+      "config": { "function_name": "send_notification",
+        "input_mapping": {
+          "template": { "type": "literal", "value": "ESCALATION_ALERT" },
+          "incident_id": { "type": "expression", "value": "start.payload.incident_id" },
+          "reason": { "type": "literal", "value": "Auto-remediation executed but health check failed" },
+          "escalate_to": { "type": "literal", "value": "sre-lead@company.com" } } } },
+
+    { "id": "notify_slack_execution_failed", "type": "FUNCTION", "label": "Notify: execution failed",
+      "config": { "function_name": "send_notification",
+        "input_mapping": {
+          "template": { "type": "literal", "value": "REMEDIATION_FAILED" },
+          "incident_id": { "type": "expression", "value": "start.payload.incident_id" },
+          "reason": { "type": "literal", "value": "Action execution failed before health check" },
+          "message": { "type": "literal", "value": "Remediation action failed to execute. Human required immediately." } } } },
+
+    { "id": "end_skip", "type": "END", "label": "Skipped (not an approved action)" },
+    { "id": "end_resolved", "type": "END", "label": "Done (resolved)" },
+    { "id": "end_escalated", "type": "END", "label": "Done (escalated)" },
+    { "id": "end_exec_failed", "type": "END", "label": "Done (execution failed)" }
+  ],
+  "edges": [
+    { "id": "e_guard_skip", "source": "guard_approved", "target": "end_skip", "label": "default: not approved" },
+    { "id": "e_guard_exec", "source": "guard_approved", "target": "execute_remediation", "label": "approved" },
+    { "id": "e_exec_dec", "source": "execute_remediation", "target": "exec_decision" },
+    { "id": "e_dec_failed", "source": "exec_decision", "target": "update_action_failed", "label": "default: failed" },
+    { "id": "e_dec_exec", "source": "exec_decision", "target": "update_action_executed", "label": "success" },
+    { "id": "e_exec_mit", "source": "update_action_executed", "target": "update_incident_mitigating" },
+    { "id": "e_failed_notify", "source": "update_action_failed", "target": "notify_slack_execution_failed" },
+    { "id": "e_mit_wait", "source": "update_incident_mitigating", "target": "wait_for_stabilization" },
+    { "id": "e_wait_health", "source": "wait_for_stabilization", "target": "run_health_check" },
+    { "id": "e_health_dec", "source": "run_health_check", "target": "health_decision" },
+    { "id": "e_hdec_failed", "source": "health_decision", "target": "notify_slack_remediation_failed", "label": "default: unhealthy" },
+    { "id": "e_hdec_resolve", "source": "health_decision", "target": "resolve_incident", "label": "healthy" },
+    { "id": "e_resolve_notify", "source": "resolve_incident", "target": "notify_slack_resolved" },
+    { "id": "e_resolved_end", "source": "notify_slack_resolved", "target": "end_resolved" },
+    { "id": "e_remfail_esc", "source": "notify_slack_remediation_failed", "target": "escalate_to_human" },
+    { "id": "e_esc_notify", "source": "escalate_to_human", "target": "notify_escalation" },
+    { "id": "e_escnotify_end", "source": "notify_escalation", "target": "end_escalated" },
+    { "id": "e_execfail_end", "source": "notify_slack_execution_failed", "target": "end_exec_failed" }
+  ]
+}

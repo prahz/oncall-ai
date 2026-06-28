@@ -1,0 +1,10 @@
+{
+  "name": "deduplicate_alerts",
+  "description": "STUB (Day 4 = real similarity). Flag a new alert as duplicate if same service+metric with status!=new exists in the last 30 min.",
+  "type": "API",
+  "code": { "$file": "code.py" },
+  "permissions": { "grants": [
+    { "resource_type": "datastore_table", "resource_name": "alerts",
+      "permission_ids": ["datastore.table.read", "datastore.record.read"] }
+  ]}
+}

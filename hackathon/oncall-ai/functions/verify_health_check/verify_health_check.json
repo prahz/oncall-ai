@@ -1,0 +1,6 @@
+{
+  "name": "verify_health_check",
+  "description": "STUB (Day 4 = real health polling). Deterministic: fails only when incident_id ends in '9' (for testing the escalation path).",
+  "type": "API",
+  "code": { "$file": "code.py" }
+}
