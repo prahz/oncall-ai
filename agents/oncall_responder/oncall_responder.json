@@ -1,5 +1,8 @@
 {
-  "agent_runtime": null,
+  "agent_runtime": {
+    "profile_id": "019f0e65-bb27-76a3-aaf8-1597035522a1",
+    "model_name": "nvidia/llama-3.1-nemotron-70b-instruct"
+  },
   "description": "The on-call chat responder: the agent behind the Slack and Telegram surfaces. Answers questions about live incidents and lets an on-call human approve or reject a pending remediation by replying in chat \u2014 running as that human, so only someone with pod access can decide.",
   "icon_url": null,
   "input_schema": null,

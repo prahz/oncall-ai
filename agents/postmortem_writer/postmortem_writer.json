@@ -1,6 +1,7 @@
 {
   "agent_runtime": {
-    "profile_id": "system:claude-3-5-sonnet"
+    "profile_id": "019f0e65-bb27-76a3-aaf8-1597035522a1",
+    "model_name": "nvidia/llama-3.1-nemotron-70b-instruct"
   },
   "description": "The incident historian: after an incident resolves, builds a structured post-mortem (timeline, root cause, impact, lessons, action items), writes it as a markdown file under /postmortems, and links it back on the incident.",
   "icon_url": null,
