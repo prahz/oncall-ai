@@ -8,13 +8,13 @@
     "slack_account": {
       "description": "Connector account for the slack surface",
       "platform": "slack",
-      "source_value": "019f19c6-10ff-72d8-9046-7f12efee36b5",
+      "source_value": "019f1eb5-381e-76e7-a647-bc2566af9de3",
       "type": "account"
     },
     "telegram_account": {
       "description": "Connector account for the custom telegram bot",
       "platform": "telegram",
-      "source_value": "019f1dae-e053-710d-b5f7-2206d9011d97",
+      "source_value": "019f1eb6-e49e-778c-b52d-bec2b6e7c593",
       "type": "account"
     }
   }

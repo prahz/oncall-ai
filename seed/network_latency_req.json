@@ -1,0 +1,7 @@
+{
+  "service": "payment-gateway",
+  "source": "custom",
+  "severity": "medium",
+  "metric": "network.latency.ms",
+  "message": "Payment gateway latency increased above 500ms for 3 consecutive checks."
+}

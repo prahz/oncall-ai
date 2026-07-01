@@ -1,0 +1,7 @@
+{
+  "service": "image-processing-worker",
+  "source": "datadog",
+  "severity": "critical",
+  "metric": "container.memory.usage",
+  "message": "Memory usage climbing steadily. Suspected memory leak leading to OOM kills."
+}

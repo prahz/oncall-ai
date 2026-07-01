@@ -1,0 +1,7 @@
+{
+  "service": "api-gateway",
+  "source": "cloudwatch",
+  "severity": "high",
+  "metric": "system.cpu.utilization",
+  "message": "CPU utilization exceeded 95% for 5 minutes."
+}
