@@ -35,3 +35,26 @@ Development in this repository is split between Lemma platform primitives and cu
   2. Run `npm start` (which executes `npx serve .`) to serve the files locally.
 - **Automated Tests:** There are currently no automated unit or integration test scripts defined in the repository (e.g., no `npm test` script in `package.json`). 
 - **End-to-End Testing:** Testing the core AI logic requires deploying the pod to a Lemma environment and triggering the relevant workflows or interacting with the configured Slack surface.
+
+## 6. How to deploy / sync to cloud
+When pushing the latest local version to the cloud using `lemma pod import .` on Windows, you may encounter a known error:
+```
+app building oncall-dashboard: npm ci
+[WinError 2] The system cannot find the file specified
+```
+This happens because the Python subprocess driving the CLI fails to execute the Windows `npm.cmd` script without a shell.
+
+**Workaround:** Instead of importing the entire directory at once, use a PowerShell loop to individually push all backend resources, completely bypassing the app compilation step:
+
+```powershell
+$dirs = @("agents", "functions", "schedules", "surfaces", "tables", "workflows")
+foreach ($dir in $dirs) {
+    if (Test-Path $dir) {
+        Write-Host "Importing $dir..."
+        lemma pod import $dir
+    }
+}
+```
+
+If you add new static files (like runbooks), you can sync them explicitly:
+`lemma file upload ./files/runbooks/your-file.md /runbooks/your-file.md`

@@ -1,0 +1,6 @@
+{
+  "service": "automated-service",
+  "source": "healthcheck",
+  "severity": "medium",
+  "message": "Service unresponsive on /ping. Restart required."
+}
