@@ -1,6 +1,6 @@
 {
   "agent_runtime": {
-    "profile_id": "019f0e65-bb27-76a3-aaf8-1597035522a1"
+    "profile_id": "system:claude-3-5-sonnet"
   },
   "description": "The incident detective: reads a triggering alert, searches the runbook library, and returns a structured root-cause analysis (cause, blast radius, confidence, suggested fix, suspect deploy).",
   "icon_url": null,

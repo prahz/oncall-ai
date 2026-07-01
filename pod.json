@@ -10,6 +10,12 @@
       "platform": "slack",
       "source_value": "019f19c6-10ff-72d8-9046-7f12efee36b5",
       "type": "account"
+    },
+    "telegram_account": {
+      "description": "Connector account for the custom telegram bot",
+      "platform": "telegram",
+      "source_value": "019f1dae-e053-710d-b5f7-2206d9011d97",
+      "type": "account"
     }
   }
 }

@@ -2,5 +2,6 @@
   "service": "database-cluster",
   "source": "datadog",
   "severity": "critical",
+  "metric": "db.connections.active.v2",
   "message": "Database connection pool exhausted. 100% active connections."
 }
