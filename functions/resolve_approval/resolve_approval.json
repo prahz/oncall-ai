@@ -1,0 +1,33 @@
+{
+  "code": {
+    "$file": "code.py"
+  },
+  "code_hash": "69626f89d1cfbc728c872af63b708fea18203f56961ed87506c5c2f326f5506b",
+  "config": null,
+  "description": "Resolve a pending incident-remediation approval from a chat surface: locate the WAITING incident_response run for the given incident (by uuid or INC number) and submit its approval FORM with approve/reject. This is how a human approves from Slack/Telegram \u2014 it resumes the same workflow gate the dashboard uses, so there is exactly one approval path.",
+  "icon_url": null,
+  "name": "resolve_approval",
+  "permissions": {
+    "grants": [
+      {
+        "permission_ids": [
+          "datastore.record.read",
+          "datastore.table.read"
+        ],
+        "resource_name": "incidents",
+        "resource_type": "datastore_table"
+      },
+      {
+        "permission_ids": [
+          "workflow.execute",
+          "workflow.read"
+        ],
+        "resource_name": "incident_response",
+        "resource_type": "workflow"
+      }
+    ]
+  },
+  "python_packages": [],
+  "type": "API",
+  "visibility": "POD"
+}

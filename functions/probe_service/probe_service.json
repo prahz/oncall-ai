@@ -1,0 +1,43 @@
+{
+  "code": {
+    "$file": "code.py"
+  },
+  "code_hash": "a12c6b2d1aaa4f10725ebf68c047a8c2cb454aa40a22f86fc09b6b4d6f45e90b",
+  "config": null,
+  "description": "Real HTTP health monitor. Polls each ENABLED monitored_services row's health endpoint, records its live status, and opens a real alert row when a latency/memory/down threshold is breached (skipping services that already have an open incident). Run on a schedule for continuous monitoring, or on-demand to force an immediate check.",
+  "icon_url": null,
+  "name": "probe_service",
+  "permissions": {
+    "grants": [
+      {
+        "permission_ids": [
+          "datastore.record.read",
+          "datastore.table.read"
+        ],
+        "resource_name": "incidents",
+        "resource_type": "datastore_table"
+      },
+      {
+        "permission_ids": [
+          "datastore.record.read",
+          "datastore.record.write",
+          "datastore.table.read"
+        ],
+        "resource_name": "alerts",
+        "resource_type": "datastore_table"
+      },
+      {
+        "permission_ids": [
+          "datastore.record.read",
+          "datastore.record.write",
+          "datastore.table.read"
+        ],
+        "resource_name": "monitored_services",
+        "resource_type": "datastore_table"
+      }
+    ]
+  },
+  "python_packages": [],
+  "type": "API",
+  "visibility": "POD"
+}

@@ -1,0 +1,34 @@
+{
+  "code": {
+    "$file": "code.py"
+  },
+  "code_hash": "c52097722dd6be81ef7e2e063c8bdf497861a1379b8d4bee8fe36e70323768f4",
+  "config": null,
+  "description": "Given a new alert, fold it into an existing open incident for the same service (or flag it as a duplicate), or signal that a new incident is needed. Turns an alert storm into one unit of work.",
+  "icon_url": null,
+  "name": "dedupe_and_correlate",
+  "permissions": {
+    "grants": [
+      {
+        "permission_ids": [
+          "datastore.record.read",
+          "datastore.table.read"
+        ],
+        "resource_name": "incidents",
+        "resource_type": "datastore_table"
+      },
+      {
+        "permission_ids": [
+          "datastore.record.read",
+          "datastore.record.write",
+          "datastore.table.read"
+        ],
+        "resource_name": "alerts",
+        "resource_type": "datastore_table"
+      }
+    ]
+  },
+  "python_packages": [],
+  "type": "API",
+  "visibility": "POD"
+}

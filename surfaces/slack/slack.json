@@ -1,0 +1,17 @@
+{
+  "account_id": "${slack_account}",
+  "config": {
+    "channels": [
+      {
+        "agent_name": "oncall_responder",
+        "channel_id": "C0BD8E60FPZ",
+        "channel_name": "social"
+      }
+    ]
+  },
+  "credential_mode": "CUSTOM",
+  "default_agent_name": "oncall_responder",
+  "is_enabled": true,
+  "name": "slack",
+  "platform": "SLACK"
+}

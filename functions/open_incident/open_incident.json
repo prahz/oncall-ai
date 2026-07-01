@@ -1,0 +1,51 @@
+{
+  "code": {
+    "$file": "code.py"
+  },
+  "code_hash": "889eab8853af0d96e57dbbdcc04f4efd4bb1e00f49adf7db52476ff9e163c296",
+  "config": null,
+  "description": "Turns the analyst's diagnosis into a real incident: derives the SAFETY-CRITICAL values deterministically (true severity from the alert row, runbook_safe by parsing the runbook file), scores triage/auto-approval, then creates the incident and its remediation action. The AI proposes; this function decides what is safe.",
+  "icon_url": null,
+  "name": "open_incident",
+  "permissions": {
+    "grants": [
+      {
+        "permission_ids": [
+          "datastore.record.read",
+          "datastore.record.write",
+          "datastore.table.read"
+        ],
+        "resource_name": "incidents",
+        "resource_type": "datastore_table"
+      },
+      {
+        "permission_ids": [
+          "datastore.record.read",
+          "datastore.record.write",
+          "datastore.table.read"
+        ],
+        "resource_name": "alerts",
+        "resource_type": "datastore_table"
+      },
+      {
+        "permission_ids": [
+          "datastore.record.read",
+          "datastore.record.write",
+          "datastore.table.read"
+        ],
+        "resource_name": "remediation_actions",
+        "resource_type": "datastore_table"
+      },
+      {
+        "permission_ids": [
+          "folder.read"
+        ],
+        "resource_name": "/runbooks",
+        "resource_type": "folder"
+      }
+    ]
+  },
+  "python_packages": [],
+  "type": "API",
+  "visibility": "POD"
+}

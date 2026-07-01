@@ -1,0 +1,123 @@
+{
+  "agent_runtime": {
+    "profile_id": "019f0e65-bb27-76a3-aaf8-1597035522a1"
+  },
+  "description": "The incident detective: reads a triggering alert, searches the runbook library, and returns a structured root-cause analysis (cause, blast radius, confidence, suggested fix, suspect deploy).",
+  "icon_url": null,
+  "input_schema": {
+    "properties": {
+      "alert_id": {
+        "description": "Id of the triggering alert to analyze",
+        "type": "string"
+      }
+    },
+    "required": [
+      "alert_id"
+    ],
+    "type": "object"
+  },
+  "instruction": {
+    "$file": "instruction.md"
+  },
+  "metadata": null,
+  "name": "incident_analyst",
+  "output_schema": {
+    "properties": {
+      "action_type": {
+        "enum": [
+          "restart_service",
+          "scale_up",
+          "rollback_deploy",
+          "clear_cache",
+          "notify_team",
+          "manual_fix_required"
+        ],
+        "type": "string"
+      },
+      "affected_services": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "blast_radius": {
+        "enum": [
+          "single_service",
+          "multi_service",
+          "infrastructure"
+        ],
+        "type": "string"
+      },
+      "confidence": {
+        "description": "0-1 confidence in the root cause + fix",
+        "type": "number"
+      },
+      "raw_severity": {
+        "enum": [
+          "critical",
+          "high",
+          "medium",
+          "low"
+        ],
+        "type": "string"
+      },
+      "root_cause": {
+        "description": "Most likely root cause, in plain English",
+        "type": "string"
+      },
+      "runbook_safe": {
+        "description": "Did a matched runbook mark this remediation auto-safe?",
+        "type": "boolean"
+      },
+      "service": {
+        "type": "string"
+      },
+      "suggested_fix": {
+        "type": "string"
+      },
+      "suspect_deploy": {
+        "description": "Recent deploy/commit most likely to blame, or 'unknown'",
+        "type": "string"
+      },
+      "title": {
+        "description": "Short incident title, e.g. 'High latency on payment-service'",
+        "type": "string"
+      }
+    },
+    "required": [
+      "title",
+      "service",
+      "root_cause",
+      "blast_radius",
+      "confidence",
+      "suggested_fix",
+      "action_type",
+      "runbook_safe",
+      "raw_severity"
+    ],
+    "type": "object"
+  },
+  "permissions": {
+    "grants": [
+      {
+        "permission_ids": [
+          "datastore.record.read",
+          "datastore.table.read"
+        ],
+        "resource_name": "alerts",
+        "resource_type": "datastore_table"
+      },
+      {
+        "permission_ids": [
+          "folder.read"
+        ],
+        "resource_name": "/runbooks",
+        "resource_type": "folder"
+      }
+    ]
+  },
+  "toolsets": [
+    "POD"
+  ],
+  "visibility": "POD"
+}

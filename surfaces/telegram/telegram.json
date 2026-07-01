@@ -1,0 +1,7 @@
+{
+  "credential_mode": "SYSTEM",
+  "default_agent_name": "oncall_responder",
+  "is_enabled": true,
+  "name": "telegram",
+  "platform": "TELEGRAM"
+}

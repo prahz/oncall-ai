@@ -1,0 +1,7 @@
+{
+  "description": null,
+  "name": "oncall-dashboard",
+  "public_slug": "oncall-dashboard",
+  "url": "https://oncall-dashboard.apps.lemma.work",
+  "visibility": "POD"
+}

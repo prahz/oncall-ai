@@ -1,0 +1,52 @@
+{
+  "code": {
+    "$file": "code.py"
+  },
+  "code_hash": "bb6129c0fcc7b8c4b29ffbd9f12294c3478da0fea33bccb641002ab648105967",
+  "config": null,
+  "description": "Apply an approved remediation action, then run a health re-check: on healthy, mark the action executed, resolve the incident and its alerts; on unhealthy, mark it failed and leave the incident mitigating for human escalation.",
+  "icon_url": null,
+  "name": "execute_remediation",
+  "permissions": {
+    "grants": [
+      {
+        "permission_ids": [
+          "datastore.record.read",
+          "datastore.record.write",
+          "datastore.table.read"
+        ],
+        "resource_name": "incidents",
+        "resource_type": "datastore_table"
+      },
+      {
+        "permission_ids": [
+          "datastore.record.read",
+          "datastore.record.write",
+          "datastore.table.read"
+        ],
+        "resource_name": "alerts",
+        "resource_type": "datastore_table"
+      },
+      {
+        "permission_ids": [
+          "datastore.record.read",
+          "datastore.record.write",
+          "datastore.table.read"
+        ],
+        "resource_name": "remediation_actions",
+        "resource_type": "datastore_table"
+      },
+      {
+        "permission_ids": [
+          "datastore.record.read",
+          "datastore.table.read"
+        ],
+        "resource_name": "monitored_services",
+        "resource_type": "datastore_table"
+      }
+    ]
+  },
+  "python_packages": [],
+  "type": "API",
+  "visibility": "POD"
+}

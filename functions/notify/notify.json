@@ -1,0 +1,55 @@
+{
+  "code": {
+    "$file": "code.py"
+  },
+  "code_hash": "597afe19ad2aed5d00f93f55e591a0d85e89438d50e4ca2436d84f7623e450e7",
+  "config": null,
+  "description": "Multi-channel incident notifier. Reads notification_settings and fans the incident update out to every ENABLED channel (slack, telegram, ...), routing needs_approval/escalated events to each channel's escalations target and resolved/auto_remediated to its incidents target. A disabled or misconfigured channel is skipped without failing the others. Replaces the old single-channel notify_slack.",
+  "icon_url": null,
+  "name": "notify",
+  "permissions": {
+    "grants": [
+      {
+        "permission_ids": [
+          "connector.use"
+        ],
+        "resource_name": "slack",
+        "resource_type": "connector"
+      },
+      {
+        "permission_ids": [
+          "connector.use"
+        ],
+        "resource_name": "telegram",
+        "resource_type": "connector"
+      },
+      {
+        "permission_ids": [
+          "datastore.record.read",
+          "datastore.table.read"
+        ],
+        "resource_name": "incidents",
+        "resource_type": "datastore_table"
+      },
+      {
+        "permission_ids": [
+          "datastore.record.read",
+          "datastore.table.read"
+        ],
+        "resource_name": "remediation_actions",
+        "resource_type": "datastore_table"
+      },
+      {
+        "permission_ids": [
+          "datastore.record.read",
+          "datastore.table.read"
+        ],
+        "resource_name": "notification_settings",
+        "resource_type": "datastore_table"
+      }
+    ]
+  },
+  "python_packages": [],
+  "type": "API",
+  "visibility": "POD"
+}

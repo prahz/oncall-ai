@@ -1,0 +1,9 @@
+{
+  "name": "oncall-dashboard",
+  "version": "1.0.0",
+  "description": "OnCall AI Dashboard",
+  "scripts": {
+    "start": "npx serve ."
+  },
+  "dependencies": {}
+}

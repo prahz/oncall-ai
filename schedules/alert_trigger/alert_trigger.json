@@ -1,0 +1,23 @@
+{
+  "account_id": null,
+  "agent_name": null,
+  "config": {
+    "operations": [
+      "INSERT"
+    ],
+    "table_name": "alerts"
+  },
+  "connector_trigger_id": null,
+  "filter_instruction": null,
+  "filter_output_schema": null,
+  "is_active": true,
+  "is_internal": false,
+  "last_error": null,
+  "last_fire_status": "TRIGGERED",
+  "last_fired_at": "2026-06-30T21:52:06.036586+00:00",
+  "last_run_id": "019f1a84-97f7-77f9-bca6-c998081ea735",
+  "name": "alert_trigger",
+  "schedule_type": "DATASTORE",
+  "visibility": "POD",
+  "workflow_name": "incident_response"
+}

@@ -1,0 +1,16 @@
+{
+  "code": {
+    "$file": "code.py"
+  },
+  "code_hash": "1ab5cf5be367fa08d3a817be48c836cc309cdc35b6aabd2d895beae9082da24e",
+  "config": null,
+  "description": "Score an incident's true severity from blast radius, time-of-day and user impact, and decide whether a fix is eligible for auto-approval (the autonomy dial). Pure deterministic logic, no table access.",
+  "icon_url": null,
+  "name": "triage_score",
+  "permissions": {
+    "grants": []
+  },
+  "python_packages": [],
+  "type": "API",
+  "visibility": "POD"
+}

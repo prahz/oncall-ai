@@ -1,0 +1,367 @@
+{
+  "description": "End-to-end on-call loop: a new alert is correlated; if it opens a new incident, the analyst diagnoses it, open_incident applies deterministic safety gates, and the fix is either auto-executed (safe) or sent to a human for approval before executing.",
+  "edges": [
+    {
+      "id": "e1",
+      "label": null,
+      "source": "dedupe",
+      "target": "is_new"
+    },
+    {
+      "id": "e2",
+      "label": "attached/duplicate (default)",
+      "source": "is_new",
+      "target": "end_attached"
+    },
+    {
+      "id": "e2b",
+      "label": "new incident",
+      "source": "is_new",
+      "target": "analyze"
+    },
+    {
+      "id": "e3",
+      "label": null,
+      "source": "analyze",
+      "target": "open"
+    },
+    {
+      "id": "e4",
+      "label": null,
+      "source": "open",
+      "target": "auto_route"
+    },
+    {
+      "id": "e5",
+      "label": "not auto-safe (default)",
+      "source": "auto_route",
+      "target": "notify_approval"
+    },
+    {
+      "id": "e5c",
+      "label": null,
+      "source": "notify_approval",
+      "target": "approval"
+    },
+    {
+      "id": "e5b",
+      "label": "auto-safe",
+      "source": "auto_route",
+      "target": "execute"
+    },
+    {
+      "id": "e6",
+      "label": null,
+      "source": "approval",
+      "target": "approved_route"
+    },
+    {
+      "id": "e7",
+      "label": "not approved (default)",
+      "source": "approved_route",
+      "target": "notify_rejected"
+    },
+    {
+      "id": "e7b",
+      "label": "approved",
+      "source": "approved_route",
+      "target": "execute"
+    },
+    {
+      "id": "e7c",
+      "label": null,
+      "source": "notify_rejected",
+      "target": "end_rejected"
+    },
+    {
+      "id": "e8",
+      "label": null,
+      "source": "execute",
+      "target": "notify_resolved"
+    },
+    {
+      "id": "e8b",
+      "label": null,
+      "source": "notify_resolved",
+      "target": "end_done"
+    }
+  ],
+  "icon_url": null,
+  "mode": "GLOBAL",
+  "name": "incident_response",
+  "nodes": [
+    {
+      "config": {
+        "function_name": "dedupe_and_correlate",
+        "input_mapping": {
+          "alert_id": {
+            "optional": false,
+            "type": "expression",
+            "value": "start.metadata.record_id"
+          }
+        }
+      },
+      "id": "dedupe",
+      "label": "Correlate alert",
+      "position": null,
+      "type": "FUNCTION"
+    },
+    {
+      "config": {
+        "rules": [
+          {
+            "condition": "dedupe.decision == 'new_incident'",
+            "next_node_id": "analyze"
+          }
+        ]
+      },
+      "id": "is_new",
+      "label": "New incident?",
+      "position": null,
+      "type": "DECISION"
+    },
+    {
+      "config": {
+        "agent_name": "incident_analyst",
+        "input_mapping": {
+          "alert_id": {
+            "optional": false,
+            "type": "expression",
+            "value": "start.metadata.record_id"
+          }
+        }
+      },
+      "id": "analyze",
+      "label": "Diagnose root cause",
+      "position": null,
+      "type": "AGENT"
+    },
+    {
+      "config": {
+        "function_name": "open_incident",
+        "input_mapping": {
+          "action_type": {
+            "optional": false,
+            "type": "expression",
+            "value": "analyze.action_type"
+          },
+          "affected_services": {
+            "optional": true,
+            "type": "expression",
+            "value": "analyze.affected_services"
+          },
+          "alert_id": {
+            "optional": false,
+            "type": "expression",
+            "value": "start.metadata.record_id"
+          },
+          "blast_radius": {
+            "optional": false,
+            "type": "expression",
+            "value": "analyze.blast_radius"
+          },
+          "confidence": {
+            "optional": false,
+            "type": "expression",
+            "value": "analyze.confidence"
+          },
+          "root_cause": {
+            "optional": false,
+            "type": "expression",
+            "value": "analyze.root_cause"
+          },
+          "suggested_fix": {
+            "optional": false,
+            "type": "expression",
+            "value": "analyze.suggested_fix"
+          },
+          "suspect_deploy": {
+            "optional": true,
+            "type": "expression",
+            "value": "analyze.suspect_deploy"
+          },
+          "title": {
+            "optional": false,
+            "type": "expression",
+            "value": "analyze.title"
+          }
+        }
+      },
+      "id": "open",
+      "label": "Open incident (safety gates)",
+      "position": null,
+      "type": "FUNCTION"
+    },
+    {
+      "config": {
+        "rules": [
+          {
+            "condition": "open.auto_approve_eligible == `true`",
+            "next_node_id": "execute"
+          }
+        ]
+      },
+      "id": "auto_route",
+      "label": "Auto-approve safe?",
+      "position": null,
+      "type": "DECISION"
+    },
+    {
+      "config": {
+        "function_name": "notify",
+        "input_mapping": {
+          "event": {
+            "type": "literal",
+            "value": "needs_approval"
+          },
+          "incident_id": {
+            "optional": false,
+            "type": "expression",
+            "value": "open.incident_id"
+          }
+        }
+      },
+      "id": "notify_approval",
+      "label": "Notify channels (approval needed)",
+      "position": null,
+      "type": "FUNCTION"
+    },
+    {
+      "config": {
+        "assignee_pod_member_id": null,
+        "assignee_pod_member_id_expression": null,
+        "input_schema": {
+          "properties": {
+            "approved": {
+              "title": "Approve this remediation?",
+              "type": "boolean"
+            },
+            "notes": {
+              "title": "Notes (optional)",
+              "type": "string"
+            }
+          },
+          "required": [
+            "approved"
+          ],
+          "type": "object"
+        },
+        "ui_schema": {
+          "ui:order": [
+            "approved",
+            "notes"
+          ]
+        }
+      },
+      "id": "approval",
+      "label": "Approve remediation",
+      "position": null,
+      "type": "FORM"
+    },
+    {
+      "config": {
+        "rules": [
+          {
+            "condition": "approval.approved == `true`",
+            "next_node_id": "execute"
+          }
+        ]
+      },
+      "id": "approved_route",
+      "label": "Approved?",
+      "position": null,
+      "type": "DECISION"
+    },
+    {
+      "config": {
+        "function_name": "execute_remediation",
+        "input_mapping": {
+          "remediation_action_id": {
+            "optional": false,
+            "type": "expression",
+            "value": "open.remediation_action_id"
+          },
+          "simulate_healthy": {
+            "type": "literal",
+            "value": true
+          }
+        }
+      },
+      "id": "execute",
+      "label": "Execute remediation",
+      "position": null,
+      "type": "FUNCTION"
+    },
+    {
+      "config": {
+        "function_name": "notify",
+        "input_mapping": {
+          "event": {
+            "type": "literal",
+            "value": "resolved"
+          },
+          "incident_id": {
+            "optional": false,
+            "type": "expression",
+            "value": "execute.incident_id"
+          }
+        }
+      },
+      "id": "notify_resolved",
+      "label": "Post incident update to channels",
+      "position": null,
+      "type": "FUNCTION"
+    },
+    {
+      "config": {
+        "function_name": "notify",
+        "input_mapping": {
+          "event": {
+            "type": "literal",
+            "value": "escalated"
+          },
+          "incident_id": {
+            "optional": false,
+            "type": "expression",
+            "value": "open.incident_id"
+          }
+        }
+      },
+      "id": "notify_rejected",
+      "label": "Post escalation to channels (rejected)",
+      "position": null,
+      "type": "FUNCTION"
+    },
+    {
+      "config": {},
+      "id": "end_attached",
+      "label": "Folded into existing incident",
+      "position": null,
+      "type": "END"
+    },
+    {
+      "config": {},
+      "id": "end_rejected",
+      "label": "Remediation rejected",
+      "position": null,
+      "type": "END"
+    },
+    {
+      "config": {},
+      "id": "end_done",
+      "label": "Incident handled",
+      "position": null,
+      "type": "END"
+    }
+  ],
+  "start": {
+    "config": {
+      "operations": [
+        "INSERT"
+      ],
+      "table_name": "alerts"
+    },
+    "type": "DATASTORE_EVENT"
+  },
+  "visibility": "POD"
+}

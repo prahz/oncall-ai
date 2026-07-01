@@ -1,0 +1,44 @@
+{
+  "agent_runtime": null,
+  "description": "The on-call chat responder: the agent behind the Slack and Telegram surfaces. Answers questions about live incidents and lets an on-call human approve or reject a pending remediation by replying in chat \u2014 running as that human, so only someone with pod access can decide.",
+  "icon_url": null,
+  "input_schema": null,
+  "instruction": {
+    "$file": "instruction.md"
+  },
+  "metadata": null,
+  "name": "oncall_responder",
+  "output_schema": null,
+  "permissions": {
+    "grants": [
+      {
+        "permission_ids": [
+          "datastore.record.read",
+          "datastore.table.read"
+        ],
+        "resource_name": "incidents",
+        "resource_type": "datastore_table"
+      },
+      {
+        "permission_ids": [
+          "datastore.record.read",
+          "datastore.table.read"
+        ],
+        "resource_name": "remediation_actions",
+        "resource_type": "datastore_table"
+      },
+      {
+        "permission_ids": [
+          "function.execute",
+          "function.read"
+        ],
+        "resource_name": "resolve_approval",
+        "resource_type": "function"
+      }
+    ]
+  },
+  "toolsets": [
+    "POD"
+  ],
+  "visibility": "POD"
+}

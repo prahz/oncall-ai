@@ -1,0 +1,15 @@
+{
+  "contents": {},
+  "description": "The AI on-call engineer for teams without an SRE",
+  "format_version": 2,
+  "icon_url": null,
+  "name": "oncall-ai",
+  "variables": {
+    "slack_account": {
+      "description": "Connector account for the slack surface",
+      "platform": "slack",
+      "source_value": "019f19c6-10ff-72d8-9046-7f12efee36b5",
+      "type": "account"
+    }
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "agent_runtime": {
+    "profile_id": "019f0e65-bb27-76a3-aaf8-1597035522a1"
+  },
+  "description": "The incident historian: after an incident resolves, builds a structured post-mortem (timeline, root cause, impact, lessons, action items), writes it as a markdown file under /postmortems, and links it back on the incident.",
+  "icon_url": null,
+  "input_schema": {
+    "properties": {
+      "incident_id": {
+        "description": "Id of the resolved incident to write up",
+        "type": "string"
+      }
+    },
+    "required": [
+      "incident_id"
+    ],
+    "type": "object"
+  },
+  "instruction": {
+    "$file": "instruction.md"
+  },
+  "metadata": null,
+  "name": "postmortem_writer",
+  "output_schema": {
+    "properties": {
+      "postmortem_path": {
+        "description": "Path of the written post-mortem file, e.g. /postmortems/INC-12.md",
+        "type": "string"
+      },
+      "summary": {
+        "description": "One-line summary of the incident",
+        "type": "string"
+      }
+    },
+    "required": [
+      "postmortem_path",
+      "summary"
+    ],
+    "type": "object"
+  },
+  "permissions": {
+    "grants": [
+      {
+        "permission_ids": [
+          "datastore.record.read",
+          "datastore.record.write",
+          "datastore.table.read"
+        ],
+        "resource_name": "incidents",
+        "resource_type": "datastore_table"
+      },
+      {
+        "permission_ids": [
+          "datastore.record.read",
+          "datastore.table.read"
+        ],
+        "resource_name": "alerts",
+        "resource_type": "datastore_table"
+      },
+      {
+        "permission_ids": [
+          "datastore.record.read",
+          "datastore.table.read"
+        ],
+        "resource_name": "remediation_actions",
+        "resource_type": "datastore_table"
+      },
+      {
+        "permission_ids": [
+          "folder.read",
+          "folder.write"
+        ],
+        "resource_name": "/postmortems",
+        "resource_type": "folder"
+      }
+    ]
+  },
+  "toolsets": [
+    "POD"
+  ],
+  "visibility": "POD"
+}

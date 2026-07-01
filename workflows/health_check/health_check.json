@@ -1,0 +1,40 @@
+{
+  "description": "Thin scheduled wrapper around probe_service: polls every enabled monitored service over HTTP and opens real alerts on a breach. A cron schedule fires this every minute; the alerts it writes are picked up by the incident_response workflow.",
+  "edges": [
+    {
+      "id": "e1",
+      "label": null,
+      "source": "probe",
+      "target": "done"
+    }
+  ],
+  "icon_url": null,
+  "mode": "GLOBAL",
+  "name": "health_check",
+  "nodes": [
+    {
+      "config": {
+        "function_name": "probe_service",
+        "input_mapping": {}
+      },
+      "id": "probe",
+      "label": "Poll monitored services",
+      "position": null,
+      "type": "FUNCTION"
+    },
+    {
+      "config": {},
+      "id": "done",
+      "label": "Probed",
+      "position": null,
+      "type": "END"
+    }
+  ],
+  "start": {
+    "config": {
+      "schedule_type": "CRON"
+    },
+    "type": "SCHEDULED"
+  },
+  "visibility": "POD"
+}
