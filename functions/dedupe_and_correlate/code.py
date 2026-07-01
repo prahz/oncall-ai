@@ -36,15 +36,17 @@ async def dedupe_and_correlate(ctx: FunctionContext, data: DedupeInput) -> Dedup
         if a["id"] == alert["id"]:
             continue
         if a.get("metric") == alert.get("metric") and a.get("incident_id"):
-            alerts.update(alert["id"], {
-                "status": "correlated",
-                "incident_id": a["incident_id"],
-                "correlation_group": a.get("correlation_group") or str(a["incident_id"]),
-            })
-            return DedupeResult(
-                decision="attached", incident_id=str(a["incident_id"]), is_duplicate=True,
-                reason=f"Duplicate of a recent {service}/{alert.get('metric')} alert",
-            )
+            inc = pod.table("incidents").get(a["incident_id"])
+            if inc and inc.get("status") != "resolved":
+                alerts.update(alert["id"], {
+                    "status": "correlated",
+                    "incident_id": a["incident_id"],
+                    "correlation_group": a.get("correlation_group") or str(a["incident_id"]),
+                })
+                return DedupeResult(
+                    decision="attached", incident_id=str(a["incident_id"]), is_duplicate=True,
+                    reason=f"Duplicate of a recent {service}/{alert.get('metric')} alert",
+                )
 
     # 2) Any open (not yet resolved) incident for this service? Attach to it.
     open_incidents = pod.records.list(
