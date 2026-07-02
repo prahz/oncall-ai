@@ -30,13 +30,7 @@ However, on Windows, importing the entire directory may cause a `[WinError 2]` c
 **Workaround:** You can bypass the app build step and successfully push all backend components by running this script in your PowerShell terminal from the repository root:
 
 ```powershell
-$dirs = @("agents", "functions", "schedules", "surfaces", "tables", "workflows")
-foreach ($dir in $dirs) {
-    if (Test-Path $dir) {
-        Write-Host "Importing $dir..."
-        lemma pod import $dir
-    }
-}
+.\deploy.ps1
 ```
 
 If you add new static files (like runbooks), sync them explicitly:

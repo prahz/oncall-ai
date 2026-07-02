@@ -1,0 +1,11 @@
+{
+  "code": {
+    "$file": "code.py"
+  },
+  "description": "Inspect pod methods",
+  "name": "inspect",
+  "permissions": {
+    "grants": []
+  },
+  "type": "API"
+}

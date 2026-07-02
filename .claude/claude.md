@@ -44,30 +44,11 @@ app building oncall-dashboard: npm ci
 ```
 This happens because the Python subprocess driving the CLI fails to execute the Windows `npm.cmd` script without a shell.
 
-**Workaround:** Instead of importing the entire directory at once, use a PowerShell loop to individually push all backend resources, completely bypassing the app compilation step:
+**Workaround:** Use the provided deployment script to push all backend resources and the dashboard app, bypassing the app compilation step:
 
 ```powershell
-$dirs = @("agents", "functions", "schedules", "surfaces", "tables", "workflows")
-foreach ($dir in $dirs) {
-    if (Test-Path $dir) {
-        Write-Host "Importing $dir..."
-        lemma pod import $dir
-    }
-}
+.\deploy.ps1
 ```
 
 If you add new static files (like runbooks), you can sync them explicitly:
 `lemma file upload ./files/runbooks/your-file.md /runbooks/your-file.md`
-
-### Dashboard Deployment Error
-If you are trying to push the dashboard app using `lemma pod import .\apps\oncall-dashboard\` or similar, it may fail with `[WinError 2] The system cannot find the file specified` because the CLI detects `package.json` and attempts to run `npm ci` natively, which fails if `npm` is not installed or available to the Python subprocess on Windows.
-
-**Resolution**: To successfully push the dashboard as a static site (since it doesn't actually need building):
-
-1. **Ensure a globally unique slug:** Check `apps/oncall-dashboard/oncall-dashboard.json`. The `public_slug` must be globally unique across all of Lemma. Change it if necessary (e.g., `"public_slug": "oncall-dashboard-harsh-dev"`).
-2. **Create the app config in the cloud:** Run this so the cloud knows about your new slug before you deploy:
-   `lemma apps create -f .\apps\oncall-dashboard\oncall-dashboard.json`
-3. **Bypass the NPM build:** Rename `package.json` to something else (e.g., `package.json.bak`) temporarily so the CLI treats it as a static site instead of a Vite/Node app.
-4. **Deploy the app source:**
-   `lemma apps deploy oncall-dashboard .\apps\oncall-dashboard\source -y`
-5. **Restore the file:** Rename the file back to `package.json`.

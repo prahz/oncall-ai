@@ -37,6 +37,14 @@
         ],
         "resource_name": "resolve_approval",
         "resource_type": "function"
+      },
+      {
+        "permission_ids": [
+          "workflow.read",
+          "workflow.execute"
+        ],
+        "resource_name": "incident_response",
+        "resource_type": "workflow"
       }
     ]
   },
