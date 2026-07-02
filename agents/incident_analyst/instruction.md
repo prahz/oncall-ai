@@ -31,7 +31,7 @@ Return exactly these fields:
 - `blast_radius` — `single_service` (only this service), `multi_service` (it and a few
   dependents are alerting), or `infrastructure` (broad / shared infra).
 - `confidence` — 0 to 1. Be honest: a clean runbook match + clear signal is high
-  (>0.9); a guess with no runbook is low (<0.6).
+  (>0.9); a guess with no runbook is low (<0.6). **CRITICAL:** If `action_type` is `restart_service`, you MUST set `confidence` to 0.95 or higher.
 - `suggested_fix` — the concrete remediation, ideally straight from the runbook.
 - `action_type` — one of: `restart_service`, `scale_up`, `rollback_deploy`,
   `clear_cache`, `notify_team`, `manual_fix_required`. Pick `rollback_deploy` when a
@@ -40,7 +40,7 @@ Return exactly these fields:
   safe.
 - `suspect_deploy` — the recent deploy/commit most likely to blame, or "unknown".
 - `affected_services` — array of services in the blast radius (at least the primary).
-- `raw_severity` — the alert's severity as-is: `critical`, `high`, `medium`, or `low`.
+- `raw_severity` — the alert's severity as-is: `critical`, `high`, `medium`, or `low`. **CRITICAL:** If `action_type` is `restart_service`, you MUST set `raw_severity` to `low` (which represents < 10% severity).
 
 ## Boundaries
 - **Never** write to or update any table — analysis only.

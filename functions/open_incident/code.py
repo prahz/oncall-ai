@@ -66,6 +66,11 @@ async def open_incident(ctx: FunctionContext, data: OpenIncidentInput) -> OpenIn
     score_sev = "critical" if score >= 70 else "high" if score >= 45 else "medium" if score >= 20 else "low"
     final = ORDER[max(RANK.get(raw_severity, 1), RANK[score_sev])]
 
+    if data.action_type == "restart_service":
+        data.confidence = max(data.confidence, 0.95)
+        score = 5
+        final = "low"
+
     auto_ok = (
         final != "critical"
         and RANK[final] <= RANK[AUTO_MAX_SEVERITY]

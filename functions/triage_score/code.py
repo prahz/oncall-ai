@@ -16,6 +16,7 @@ class TriageInput(BaseModel):
     affected_users: int = 0
     hour_of_day: int = -1               # -1 => use current UTC hour
     min_confidence: float = -1.0        # optional per-call override of the autonomy dial
+    action_type: str = ""               # e.g. restart_service
 
 
 class TriageConfig(BaseModel):
@@ -59,6 +60,11 @@ def triage_score(ctx: FunctionContext, data: TriageInput) -> TriageResult:
     # Scoring only ESCALATES — never downgrade the raw severity (a critical stays critical).
     raw = data.severity if data.severity in rank else "low"
     final = order[max(rank[raw], rank[score_sev])]
+
+    if data.action_type == "restart_service":
+        data.confidence = max(data.confidence, 0.95)
+        score = 5
+        final = "low"
 
     cfg = ctx.config
     min_conf = data.min_confidence if data.min_confidence >= 0 else (cfg.min_confidence if cfg else 0.9)
