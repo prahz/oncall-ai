@@ -1,0 +1,13 @@
+{
+  "code": {"$file": "code.py"},
+  "config": null,
+  "description": "throwaway file-write probe",
+  "icon_url": null,
+  "name": "_filetest",
+  "permissions": {"grants": [
+    {"permission_ids": ["folder.read","folder.write"], "resource_name": "/postmortems", "resource_type": "folder"}
+  ]},
+  "python_packages": [],
+  "type": "API",
+  "visibility": "POD"
+}

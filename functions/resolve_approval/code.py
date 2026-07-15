@@ -45,35 +45,53 @@ async def resolve_approval(ctx: FunctionContext, data: ResolveInput) -> ResolveR
     if not incident_id:
         return ResolveResult(ok=False, message="Could not find that incident. Give an incident id or INC number.")
 
+    target_number = data.incident_number
+
     # Find the WAITING run for this incident and submit its approval form.
     runs = pod.workflows.runs(WORKFLOW, limit=100).to_dict().get("items", [])
+    human_waits = []                 # (run_id, node_id, ctx_open) for every HUMAN wait
     for r in runs:
         if r.get("status") != "WAITING":
             continue
-        run = pod.workflows.run_get(str(r["id"])).to_dict()
+        try:
+            run = pod.workflows.run_get(str(r["id"])).to_dict()
+        except Exception:
+            continue                 # a single unreadable run must not sink the lookup
         aw = run.get("active_wait") or {}
         if aw.get("wait_type") != "HUMAN":
             continue
         ctx_open = (run.get("execution_context") or {}).get("open") or {}
-        if str(ctx_open.get("incident_id")) != str(incident_id):
-            continue
+        human_waits.append((str(r["id"]), aw.get("node_id"), ctx_open))
 
-        node_id = aw.get("node_id")
-        pod.workflows.submit_form(
-            str(r["id"]),
-            node_id=node_id,
-            inputs={"approved": bool(data.approved), "notes": data.notes},
-        )
-        number = int(ctx_open.get("incident_number") or 0)
-        decision = "approved" if data.approved else "rejected"
-        verb = "Approved — executing remediation now." if data.approved else "Rejected — escalating to a human."
+    # Match by incident id, then by INC number, then — if there is exactly one
+    # pending approval — accept it (a human clearly means "the one waiting on me").
+    match = None
+    for run_id, node_id, ctx_open in human_waits:
+        if str(ctx_open.get("incident_id")) == str(incident_id):
+            match = (run_id, node_id, ctx_open); break
+    if match is None and target_number is not None:
+        for run_id, node_id, ctx_open in human_waits:
+            if int(ctx_open.get("incident_number") or 0) == int(target_number):
+                match = (run_id, node_id, ctx_open); break
+    if match is None and len(human_waits) == 1:
+        match = human_waits[0]
+
+    if match is None:
         return ResolveResult(
-            ok=True, incident_id=str(incident_id), incident_number=number,
-            run_id=str(r["id"]), decision=decision,
-            message=f"INC-{number}: {verb}",
+            ok=False, incident_id=str(incident_id),
+            message="No remediation is currently awaiting approval for that incident (already decided or auto-handled).",
         )
 
+    run_id, node_id, ctx_open = match
+    pod.workflows.submit_form(
+        run_id, node_id=node_id,
+        inputs={"approved": bool(data.approved), "notes": data.notes},
+    )
+    number = int(ctx_open.get("incident_number") or target_number or 0)
+    decision = "approved" if data.approved else "rejected"
+    verb = "Approved — executing remediation now." if data.approved else "Rejected — escalating to a human."
     return ResolveResult(
-        ok=False, incident_id=str(incident_id),
-        message="No remediation is currently awaiting approval for that incident (already decided or auto-handled).",
+        ok=True, incident_id=str(incident_id), incident_number=number,
+        run_id=run_id, decision=decision,
+        message=f"INC-{number}: {verb}",
     )

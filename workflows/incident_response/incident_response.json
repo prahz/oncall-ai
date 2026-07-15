@@ -83,6 +83,30 @@
       "id": "e8b",
       "label": null,
       "source": "notify_resolved",
+      "target": "resolved_route"
+    },
+    {
+      "id": "e9",
+      "label": "resolved",
+      "source": "resolved_route",
+      "target": "postmortem"
+    },
+    {
+      "id": "e9b",
+      "label": "still mitigating (default)",
+      "source": "resolved_route",
+      "target": "end_done"
+    },
+    {
+      "id": "e9c",
+      "label": null,
+      "source": "postmortem",
+      "target": "publish_pm"
+    },
+    {
+      "id": "e9d",
+      "label": null,
+      "source": "publish_pm",
       "target": "end_done"
     }
   ],
@@ -329,6 +353,52 @@
       },
       "id": "notify_rejected",
       "label": "Post escalation to channels (rejected)",
+      "position": null,
+      "type": "FUNCTION"
+    },
+    {
+      "config": {
+        "rules": [
+          {
+            "condition": "execute.incident_status == 'resolved'",
+            "next_node_id": "postmortem"
+          }
+        ]
+      },
+      "id": "resolved_route",
+      "label": "Incident resolved?",
+      "position": null,
+      "type": "DECISION"
+    },
+    {
+      "config": {
+        "agent_name": "postmortem_writer",
+        "input_mapping": {
+          "incident_id": {
+            "optional": false,
+            "type": "expression",
+            "value": "execute.incident_id"
+          }
+        }
+      },
+      "id": "postmortem",
+      "label": "Write blameless post-mortem",
+      "position": null,
+      "type": "AGENT"
+    },
+    {
+      "config": {
+        "function_name": "publish_postmortem",
+        "input_mapping": {
+          "incident_id": {
+            "optional": false,
+            "type": "expression",
+            "value": "execute.incident_id"
+          }
+        }
+      },
+      "id": "publish_pm",
+      "label": "Publish post-mortem to /postmortems",
       "position": null,
       "type": "FUNCTION"
     },

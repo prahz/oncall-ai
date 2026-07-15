@@ -1,10 +1,10 @@
 {
-  "description": "Scheduled self-healing: re-enqueue collections runs that failed transiently, falling back to a deterministic draft after bounded retries so every invoice converges.",
+  "description": "Scheduled self-healing safety net: sweeps incidents that auto-remediation left in 'mitigating', re-applies the runbook fix (bounded retries), and resolves or escalates. Runs on a cron; can also be triggered on demand.",
   "edges": [
     {
-      "id": "e_requeue_end",
+      "id": "e_heal_end",
       "label": null,
-      "source": "requeue",
+      "source": "heal",
       "target": "end"
     }
   ],
@@ -14,11 +14,11 @@
   "nodes": [
     {
       "config": {
-        "function_name": "requeue_stuck",
+        "function_name": "heal",
         "input_mapping": {}
       },
-      "id": "requeue",
-      "label": "Requeue stuck",
+      "id": "heal",
+      "label": "Retry stuck incidents from runbook",
       "position": null,
       "type": "FUNCTION"
     },
@@ -31,8 +31,10 @@
     }
   ],
   "start": {
-    "config": null,
-    "type": "MANUAL"
+    "config": {
+      "schedule_type": "CRON"
+    },
+    "type": "SCHEDULED"
   },
   "visibility": "POD"
 }

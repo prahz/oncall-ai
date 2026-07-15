@@ -94,8 +94,10 @@ async def execute_remediation(ctx: FunctionContext, data: ExecuteInput) -> Execu
     inc.update(incident_id, {"status": "mitigating", "mitigated_at": now})
 
     # Decide how to verify: real HTTP against the monitored service, or the simulate fallback.
+    # Only hit the network for an ENABLED monitored service with a real endpoint;
+    # disabled/demo rows fall through to the simulated re-check so the fix converges.
     row = _service_row(pod, service)
-    if row and row.get("base_url"):
+    if row and row.get("enabled") and row.get("base_url"):
         healthy, detail = _apply_real_fix(row, action_type)
     else:
         # No monitored service for this incident: fall back to the demo toggle

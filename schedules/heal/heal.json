@@ -2,12 +2,12 @@
   "account_id": null,
   "agent_name": null,
   "config": {
-    "cron": "*/3 * * * *"
+    "cron": "*/2 * * * *"
   },
   "connector_trigger_id": null,
   "filter_instruction": null,
   "filter_output_schema": null,
-  "is_active": false,
+  "is_active": true,
   "is_internal": false,
   "last_error": null,
   "last_fire_status": null,

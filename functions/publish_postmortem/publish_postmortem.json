@@ -1,0 +1,33 @@
+{
+  "code": {
+    "$file": "code.py"
+  },
+  "config": null,
+  "description": "Publish an incident's post-mortem markdown (incidents.postmortem_md) to a real /postmortems/INC-<number>.md file and record postmortem_path on the incident. Deterministic docs publishing for the LLM-authored post-mortem.",
+  "icon_url": null,
+  "name": "publish_postmortem",
+  "permissions": {
+    "grants": [
+      {
+        "permission_ids": [
+          "datastore.record.read",
+          "datastore.record.write",
+          "datastore.table.read"
+        ],
+        "resource_name": "incidents",
+        "resource_type": "datastore_table"
+      },
+      {
+        "permission_ids": [
+          "folder.read",
+          "folder.write"
+        ],
+        "resource_name": "/postmortems",
+        "resource_type": "folder"
+      }
+    ]
+  },
+  "python_packages": [],
+  "type": "API",
+  "visibility": "POD"
+}
