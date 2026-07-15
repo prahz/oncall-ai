@@ -1,0 +1,21 @@
+{
+  "description": "Thin scheduled wrapper: runs daily_stats to post the incident-ops digest to Slack/Telegram on a daily cron.",
+  "edges": [
+    { "id": "e1", "label": null, "source": "stats", "target": "done" }
+  ],
+  "icon_url": null,
+  "mode": "GLOBAL",
+  "name": "daily_stats_wf",
+  "nodes": [
+    {
+      "config": { "function_name": "daily_stats", "input_mapping": {} },
+      "id": "stats",
+      "label": "Post daily digest",
+      "position": null,
+      "type": "FUNCTION"
+    },
+    { "config": {}, "id": "done", "label": "Done", "position": null, "type": "END" }
+  ],
+  "start": { "config": { "schedule_type": "CRON" }, "type": "SCHEDULED" },
+  "visibility": "POD"
+}
