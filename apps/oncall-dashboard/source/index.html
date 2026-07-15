@@ -30,7 +30,18 @@
   }
   *{box-sizing:border-box}
   html,body{height:100%}
-  body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  body{margin:0;color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;
+    background:
+      radial-gradient(820px 460px at 8% -10%, rgba(109,94,252,.13), transparent 60%),
+      radial-gradient(720px 440px at 102% -4%, rgba(56,189,248,.10), transparent 55%),
+      radial-gradient(760px 520px at 50% 118%, rgba(16,185,129,.07), transparent 55%),
+      var(--bg);
+    background-attachment:fixed}
+  :root[data-theme="dark"] body{background:
+      radial-gradient(820px 460px at 8% -10%, rgba(139,125,255,.16), transparent 60%),
+      radial-gradient(720px 440px at 102% -4%, rgba(56,189,248,.10), transparent 55%),
+      radial-gradient(760px 520px at 50% 118%, rgba(46,230,166,.08), transparent 55%),
+      var(--bg);background-attachment:fixed}
   a{color:var(--accent);text-decoration:none}
   ::-webkit-scrollbar{width:10px;height:10px}
   ::-webkit-scrollbar-thumb{background:var(--surface3);border-radius:8px;border:2px solid transparent;background-clip:padding-box}
@@ -41,11 +52,11 @@
   .app{display:grid;grid-template-columns:var(--sidebar) 1fr;min-height:100vh}
 
   /* SIDEBAR */
-  .side{background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;gap:6px;padding:18px 14px;position:sticky;top:0;height:100vh;overflow:auto}
+  .side{background:color-mix(in srgb,var(--surface) 72%,transparent);backdrop-filter:blur(18px);border-right:1px solid color-mix(in srgb,var(--border) 80%,transparent);display:flex;flex-direction:column;gap:6px;padding:18px 14px;position:sticky;top:0;height:100vh;overflow:auto}
   .brand{display:flex;align-items:center;gap:11px;padding:4px 8px 14px}
   .logo{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--accent),#a06bff);display:grid;place-items:center;box-shadow:0 6px 16px var(--accent-ring);flex:none}
   .logo svg{width:19px;height:19px;color:#fff}
-  .brand .nm{font-size:19px;font-weight:800;letter-spacing:-.4px}
+  .brand .nm{font-size:20px;font-weight:800;letter-spacing:-.5px;background:linear-gradient(120deg,var(--text) 30%,var(--accent));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
   .brand .tag{color:var(--dim);font-size:11px;margin-top:-3px}
   .side .lbl{font-size:10.5px;text-transform:uppercase;letter-spacing:.7px;color:var(--dim);font-weight:700;padding:14px 8px 6px}
   .live{display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--surface2);border-radius:9px;font-size:12.5px;color:var(--muted);font-weight:600}
@@ -95,7 +106,9 @@
   .mi .d{color:var(--muted);font-size:11.5px;margin-top:1px}
 
   .kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
-  .kpi{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:15px 16px;box-shadow:var(--shadow-sm);position:relative;overflow:hidden}
+  .kpi{background:color-mix(in srgb,var(--surface) 76%,transparent);backdrop-filter:blur(16px);border:1px solid color-mix(in srgb,var(--border) 80%,transparent);border-radius:16px;padding:16px 17px;box-shadow:var(--shadow-sm);position:relative;overflow:hidden;transition:.16s}
+  .kpi:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+  .kpi::after{content:"";position:absolute;inset:0 0 auto 0;height:1px;background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--accent) 30%,transparent),transparent)}
   .kpi .ic{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;margin-bottom:10px}
   .kpi .ic svg{width:16px;height:16px}
   .kpi .n{font-size:26px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-1px;line-height:1}
@@ -104,7 +117,7 @@
   .kpi.warn .ic{background:var(--warn-soft);color:var(--warn)} .kpi.warn .n{color:var(--warn)}
   .kpi.ok .ic{background:var(--ok-soft);color:var(--ok)} .kpi.ok .n{color:var(--ok)}
 
-  .card{background:var(--surface);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow-sm);overflow:hidden}
+  .card{background:color-mix(in srgb,var(--surface) 78%,transparent);backdrop-filter:blur(16px);border:1px solid color-mix(in srgb,var(--border) 80%,transparent);border-radius:18px;box-shadow:var(--shadow-sm);overflow:hidden}
   .card>.h{padding:14px 18px;border-bottom:1px solid var(--border);font-weight:700;font-size:13.5px;display:flex;align-items:center;gap:9px}
   .card>.h .count{margin-left:auto;color:var(--dim);font-weight:600;font-size:12px}
   .pill{background:var(--warn);color:#3a2a00;font-size:11px;font-weight:800;padding:2px 9px;border-radius:20px}
@@ -284,6 +297,37 @@
 })();
 
 var client, selectedId=null, incidents=[], runbookSafe={}, filter="all", busy=false;
+var ORG_ID="019eff2e-a06b-7647-b98a-605385ee80aa";   // harshdumpss-s-space (for connector sends)
+
+/* ---------- Slack / Telegram notifications (sent straight from the browser
+   via the connector — needs_approval + escalated go to the escalations channel) ---------- */
+var ESC_EVENTS={needs_approval:1, escalated:1, rejected:1};
+function slackText(event, inc){
+  var num=inc.number, title=inc.title||"incident", svc=inc.service||"unknown", sev=(inc.severity||"").toUpperCase();
+  var conf=inc.confidence!=null?Math.round(inc.confidence*100)+"%":"—";
+  var head="INC-"+num+" · "+title;
+  var dash="<"+window.location.origin+"|Open the oncall dashboard →>";
+  if(event==="needs_approval") return ":rotating_light: *Approval needed — "+head+"*\n*Service:* "+svc+"   *Severity:* "+sev+"   *Confidence:* "+conf+"\n*Root cause:* "+(inc.root_cause||"—")+"\n*Proposed fix:* "+(inc.suggested_fix||"—")+"\n*Approve / reject:* "+dash;
+  if(event==="rejected")      return ":no_entry: *Rejected — "+head+"*\n*Service:* "+svc+"   *Severity:* "+sev+"\nRemediation was rejected by on-call and escalated to a human.";
+  if(event==="escalated")     return ":warning: *Escalation — "+head+"*\n*Service:* "+svc+"   *Severity:* "+sev+"\nAutomated remediation did not hold — a human is needed.\n*Last fix:* "+(inc.suggested_fix||"—");
+  if(event==="auto_remediated") return ":white_check_mark: *Auto-remediated — "+head+"*\n*Service:* "+svc+"   *Severity:* "+sev+"\nRunbook-safe fix applied automatically; health check passed.\n*Fix:* "+(inc.suggested_fix||"—");
+  return ":white_check_mark: *Resolved — "+head+"*\n*Service:* "+svc+"   *Severity:* "+sev+"\n*Fix:* "+(inc.suggested_fix||"—");
+}
+async function notifyChannels(event, inc){
+  try{
+    var rows=(await client.records.list("notification_settings",{limit:50})).items||[];
+    var text=slackText(event, inc);
+    rows.forEach(function(r){
+      if(r.enabled!==true || !r.auth_config || !r.send_operation) return;
+      var target = ESC_EVENTS[event] ? (r.escalations_target||r.incidents_target) : (r.incidents_target||r.escalations_target);
+      if(!target) return;
+      var payload={body:{}}; payload.body[r.target_field||"channel"]=target; payload.body.text=text;
+      try{
+        client.connectors.operations.execute({organizationId:ORG_ID, authConfigName:r.auth_config}, r.send_operation, payload, r.account_id||undefined).catch(function(){});
+      }catch(e){}
+    });
+  }catch(e){}
+}
 
 /* ---- demo scenarios: each carries the diagnosis the analyst would produce.
    The dashboard runs the whole lifecycle on the datastore (instant + reliable);
@@ -425,7 +469,7 @@ async function fireScenario(i){
       result: autoOk?null:("Gated: "+(autoSafe?"":"runbook not auto-safe; ")+(tri.final==="critical"?"critical severity; ":"")+"needs human approval")
     });
     selectedId=inc.id;
-    toast(autoOk?("INC-"+inc.number+" · analysing → auto-remediating…"):("INC-"+inc.number+" · needs your approval"), autoOk?"ok":"");
+    toast(autoOk?("INC-"+inc.number+" · analysing → auto-remediating…"):("INC-"+inc.number+" · needs approval — pinging Slack"), autoOk?"ok":"");
     await refreshAll();
 
     if(autoOk){
@@ -434,7 +478,10 @@ async function fireScenario(i){
       await refreshAll();
       await sleep(1300);
       await resolveIncident(inc, action, "runbook-safe fix applied automatically; health re-check passed", "agent");
+      notifyChannels("auto_remediated", inc);
       toast("INC-"+inc.number+" auto-remediated · post-mortem written","ok");
+    }else{
+      notifyChannels("needs_approval", inc);   // -> escalations channel (Slack/Telegram)
     }
     await refreshAll();
   }catch(e){ toast("Failed: "+(e&&e.message),"err"); }
@@ -457,6 +504,7 @@ async function simulateStuck(){
       description:"Restart automated-service (stateless).",confidence:0.92,auto_approved:true,status:"failed",
       executed_by:"agent",result:"restart applied; health re-check failed — left mitigating"});
     selectedId=inc.id;
+    notifyChannels("escalated", inc);
     toast("INC-"+inc.number+" stuck in mitigating — hit Self-heal to recover it","ok");
     await refreshAll();
   }catch(e){ toast("Failed: "+(e&&e.message),"err"); }
@@ -477,6 +525,7 @@ async function runHeal(){
       var action=acts[0];
       await client.records.update("incidents", inc.id, {heal_attempts:(inc.heal_attempts||0)+1});
       await resolveIncident(inc, action, "self-heal re-applied the runbook fix; health re-check passed", "self-heal");
+      notifyChannels("resolved", inc);
       healed++;
     }
     toast("Self-heal recovered "+healed+" stuck incident"+(healed>1?"s":""),"ok");
@@ -661,9 +710,11 @@ async function decide(incId,actId,approved,btn){
       await client.records.update("incidents", incId, {status:"mitigating", mitigated_at:nowISO()});
       await refreshAll(); await sleep(1200);
       await resolveIncident(inc, action, "human-approved remediation applied; health re-check passed", "you@oncall");
+      notifyChannels("resolved", inc);
       toast("INC-"+inc.number+" resolved · post-mortem written","ok");
     }else{
       await client.records.update("remediation_actions", actId, {status:"rejected", executed_by:"you@oncall", result:"rejected by on-call — escalated to a human"});
+      notifyChannels("rejected", inc);
       toast("INC-"+inc.number+" rejected — escalated to a human","");
     }
     await refreshAll();
