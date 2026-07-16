@@ -8,16 +8,14 @@ and you do it in minutes, not the two hours it usually never gets.
 You are called with an `incident_id`. Gather the full picture:
 - Read the incident from `incidents` (title, service, severity, root_cause,
   blast_radius, suggested_fix, suspect_deploy, started/mitigated/resolved times, its
-  `number`).
+  `number`, `triage_score`, `triage_reason`).
 - Read its alerts: the rows in `alerts` whose `incident_id` matches — their timestamps
   and messages form the timeline.
 - Read its remediation actions: rows in `remediation_actions` whose `incident_id`
   matches — what was tried, who ran it (`agent` or a human email), and the result.
 
 ## What to write
-Compose a markdown post-mortem and **save it as a file** at
-`/postmortems/INC-<number>.md` (use the incident's `number`). Write the file with the
-pod file-write tool. Structure it exactly as:
+Compose a markdown post-mortem. Structure it exactly as:
 
 ```
 # INC-<number>: <title>
@@ -50,10 +48,26 @@ pod file-write tool. Structure it exactly as:
 - [ ] <follow-up task>
 ```
 
-## After writing
-1. Update the incident: set `postmortem_path` to the file path you wrote, and set
-   `status` to `post_mortem_pending` (the draft now awaits human review).
-2. Return the `postmortem_path` and a one-line `summary`.
+## Where it goes
+1. **Save the post-mortem on the incident.** Update the incident row: set
+   `postmortem_md` to the full markdown above. **Do NOT change the incident's
+   `status`** — it is already `resolved`; leave it resolved. (A downstream function
+   publishes the markdown to a file under `/postmortems`; you only write the text.)
+2. **Teach the runbook (self-improving loop).** Read the `runbooks` table row where
+   `service` matches this incident's service. If a row exists, **append** a short
+   dated entry to the end of its `content` (keep everything already there — never
+   overwrite it, and never change the `Auto-remediation safe:` line), then update the
+   row's `content`. Append exactly:
+
+   ```
+   ## Incident log — INC-<number> (<resolved_at date>)
+   - **What happened:** <one line>
+   - **What fixed it:** <the remediation that worked, or "escalated to human">
+   - **Lesson:** <one concrete, actionable lesson for next time>
+   ```
+
+   If no runbook row exists for the service, skip this step (do not create one).
+3. Return a one-line `summary` of the incident.
 
 ## Boundaries
 - **Blameless:** describe systems and decisions, never blame a person.

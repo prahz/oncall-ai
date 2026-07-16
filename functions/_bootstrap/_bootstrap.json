@@ -1,0 +1,34 @@
+{
+  "code": {
+    "$file": "code.py"
+  },
+  "config": null,
+  "description": "One-shot bootstrap: writes the runbook library to /runbooks and seeds monitored_services. Safe to re-run (idempotent). Can be deleted after use.",
+  "icon_url": null,
+  "name": "_bootstrap",
+  "permissions": {
+    "grants": [
+      {
+        "permission_ids": [
+          "datastore.record.read",
+          "datastore.record.write",
+          "datastore.table.read"
+        ],
+        "resource_name": "runbooks",
+        "resource_type": "datastore_table"
+      },
+      {
+        "permission_ids": [
+          "datastore.record.read",
+          "datastore.record.write",
+          "datastore.table.read"
+        ],
+        "resource_name": "monitored_services",
+        "resource_type": "datastore_table"
+      }
+    ]
+  },
+  "python_packages": [],
+  "type": "API",
+  "visibility": "POD"
+}

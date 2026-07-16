@@ -63,8 +63,19 @@ This repository follows a standard Lemma pod architecture. Here is where everyth
 ### Seed Data
 The `seed/` directory provides pre-packaged mock alert payloads (like `automated_req.json` and `human_req.json`) alongside PowerShell scripts to trigger end-to-end testing scenarios instantly.
 
-### Files
-The `files/` directory stores static assets. Crucially, `files/runbooks/` contains the markdown runbooks (e.g., `automated-service.md`, `payment-service.md`) that the `incident_analyst` agent reads to decide how to fix an issue and whether auto-remediation is safe.
+### Runbooks (the AI's knowledge base)
+Runbooks live in the **`runbooks` table** (one row per service: `service`, `title`,
+`tier`, `auto_safe`, `content`). The `incident_analyst` reads a service's runbook to
+diagnose and propose a fix; `open_incident` and `heal` read the deterministic
+`auto_safe` flag to decide whether the AI may act without a human. The markdown
+source lives in `files/runbooks/*.md` and is loaded into the table by the `_bootstrap`
+function (run `python scripts/build_bootstrap.py` after editing a runbook, then
+re-deploy). After an incident, `postmortem_writer` **appends a dated lesson** to the
+runbook row — the runbooks improve themselves over time.
+
+> Why a table and not `/files`? The hosted file API rejects writes from the current
+> CLI/runtime, so all docs (runbooks **and** post-mortems) are stored in tables, which
+> are reliably writable from every layer.
 
 ---
 
@@ -78,59 +89,52 @@ The `files/` directory stores static assets. Crucially, `files/runbooks/` contai
 
 ## Deploying to the Cloud
 
-To push the latest code to your live Lemma cloud pod, you can typically use `lemma pod import .`. 
-
-However, on Windows, importing the entire directory may cause a `[WinError 2]` crash when trying to build the `apps/oncall-dashboard` using `npm ci`. This happens because the Python subprocess driving the CLI fails to execute the Windows `npm.cmd` script without a shell.
-
-**Workaround:** You can bypass the app build step and successfully push all backend components by running the provided PowerShell deployment script from the repository root:
+The live pod is **`Oncall-AI`** (`019f1e93-…`) in the `harshdumpss-s-space` org — the
+one that serves the dashboard at `oncall-dashboard-harsh-dev.apps.lemma.work`. There
+are several look-alike pods on this account, so **always deploy with the pinned
+script**, which targets that pod explicitly:
 
 ```powershell
 .\deploy.ps1
 ```
 
-If you add new static files (like runbooks), you can sync them explicitly without a full deploy:
+`deploy.ps1` imports every backend resource, runs the `_bootstrap` function (seeds the
+`runbooks` and `monitored_services` tables), and deploys the dashboard app — pinning
+`--org`/`--pod` on every call and working around the Windows `[WinError 2]` npm-build
+crash.
+
+If you edit a runbook under `files/runbooks/`, re-embed it and re-deploy:
 ```powershell
-lemma file upload ./files/runbooks/your-file.md /runbooks/your-file.md
+python scripts/build_bootstrap.py    # refresh the embedded runbooks
+.\deploy.ps1                         # re-import + re-run _bootstrap
 ```
 
 ---
 
-## Triggering Mock Alerts (Demos & Testing)
+## Running a Demo
 
-To test the workflows or present a demo, you can inject mock data into the `alerts` table. The Lemma CLI communicates directly with your cloud pod, so these local scripts will immediately trigger the live incident workflows in the cloud.
+Everything is driven from the **dashboard** (`oncall-dashboard-harsh-dev.apps.lemma.work`)
+— no terminal needed. The dashboard runs each scenario's full lifecycle directly on the
+datastore (reading the real `runbooks` table and computing the real triage score), so it
+is **instant and reliable** for a live demo — it does not wait on the serverless
+functions, whose cold-starts on this pod tier are slow.
 
-The `seed/` directory contains pre-configured scenarios:
+1. **Auto-remediation story.** Simulate **"GC thrashing / high latency"** (api-gateway)
+   or **"Service unresponsive"** (automated-service). The runbook marks these auto-safe,
+   so the incident triages, executes the fix, resolves, and writes a post-mortem —
+   hands-free, live in front of you. Open the incident to show the **triage-score
+   breakdown**, the **timeline**, and the **post-mortem** (📄).
+2. **Human-in-the-loop story.** Simulate **"DB connection pool exhausted"** (critical) or
+   **"Payment errors after deploy"**. The runbook is *not* auto-safe, so it lands in the
+   **Approval queue**. Click **Approve** and watch it execute and resolve (or **Reject**
+   to escalate).
+3. **Self-healing story.** Simulate **"a stuck incident"** (it lands in `mitigating`),
+   then click **Self-heal** — it re-applies the runbook fix and resolves it.
+4. **Self-improving runbooks.** After any resolution, open the service **Runbook** (📕) —
+   a new dated *Incident log* entry has been appended automatically.
+5. **Dark mode** toggle lives at the bottom of the sidebar.
 
-### 1. The Human-in-the-Loop Scenario (Critical)
-This scenario simulates a critical database connection pool exhaustion. Because the severity is `critical`, the safety gates will **block auto-remediation** and force the AI to ask a human for approval in Slack/Telegram.
-
-**Trigger it:**
-```powershell
-cd seed\
-.\trigger_human.ps1
-```
-
-### 2. The Auto-Remediation Scenario (Safe)
-This scenario simulates a medium-severity incident on `automated-service`. Because a runbook exists for this service (`files/runbooks/automated-service.md`) that explicitly says `"Auto-remediation safe: yes"`, the AI will **automatically execute the fix** without human intervention.
-
-**Trigger it:**
-```powershell
-cd seed\
-.\trigger_automated.ps1
-```
-
-### Custom Alerts
-You can easily create new mock alerts by making a new `.json` file in the `seed/` directory:
-
-```json
-{
-  "service": "my-custom-service",
-  "source": "datadog",
-  "severity": "high",
-  "message": "Custom error description."
-}
-```
-Then deploy it via:
-```powershell
-lemma record create alerts --file my_custom_alert.json
-```
+> The production pipeline (the `incident_analyst` agent + `incident_response` workflow +
+> functions) is fully deployed and is what a *real* inbound alert flows through. The
+> dashboard's Simulate button models those same decisions on the datastore so a live
+> demo never stalls on a serverless cold-start.

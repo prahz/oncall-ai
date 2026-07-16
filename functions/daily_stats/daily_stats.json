@@ -1,0 +1,21 @@
+{
+  "code": { "$file": "code.py" },
+  "config": null,
+  "description": "Posts an incident-ops digest (totals, active, auto-remediated, awaiting approval, delegations) to Slack/Telegram. Runs on a daily cron and can be triggered on demand; honors alert_rules (event=daily_stats).",
+  "icon_url": null,
+  "name": "daily_stats",
+  "permissions": {
+    "grants": [
+      { "permission_ids": ["connector.use"], "resource_name": "slack", "resource_type": "connector" },
+      { "permission_ids": ["connector.use"], "resource_name": "telegram", "resource_type": "connector" },
+      { "permission_ids": ["datastore.record.read","datastore.table.read"], "resource_name": "incidents", "resource_type": "datastore_table" },
+      { "permission_ids": ["datastore.record.read","datastore.table.read"], "resource_name": "remediation_actions", "resource_type": "datastore_table" },
+      { "permission_ids": ["datastore.record.read","datastore.table.read"], "resource_name": "delegations", "resource_type": "datastore_table" },
+      { "permission_ids": ["datastore.record.read","datastore.table.read"], "resource_name": "alert_rules", "resource_type": "datastore_table" },
+      { "permission_ids": ["datastore.record.read","datastore.table.read"], "resource_name": "notification_settings", "resource_type": "datastore_table" }
+    ]
+  },
+  "python_packages": [],
+  "type": "API",
+  "visibility": "POD"
+}

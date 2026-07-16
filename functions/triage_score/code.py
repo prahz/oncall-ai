@@ -3,25 +3,29 @@
 #config_type_name: TriageConfig
 #function_name: triage_score
 
+# Standalone, explainable triage scorer. This mirrors the deterministic logic in
+# open_incident so the score can be computed / demoed on its own. It is a pure
+# function of its inputs: every point in `score` is explained in `breakdown`.
+
 from datetime import datetime, timezone
-from pydantic import BaseModel
+from typing import List
+from pydantic import BaseModel, Field
 from lemma_sdk import FunctionContext
+
+ORDER = ["low", "medium", "high", "critical"]
+RANK = {name: i for i, name in enumerate(ORDER)}
 
 
 class TriageInput(BaseModel):
     severity: str                       # raw severity: critical | high | medium | low
     blast_radius: str = "single_service"
-    confidence: float = 0.0             # 0-1 confidence in the suggested fix
+    confidence: float = 0.5             # 0-1 confidence in the suggested fix
     runbook_safe: bool = False          # did a matched runbook say auto-remediation is safe?
-    affected_users: int = 0
     hour_of_day: int = -1               # -1 => use current UTC hour
-    min_confidence: float = -1.0        # optional per-call override of the autonomy dial
-    action_type: str = ""               # e.g. restart_service
 
 
 class TriageConfig(BaseModel):
-    min_confidence: float = 0.9         # default auto-approve confidence threshold
-    auto_max_severity: str = "high"     # never auto-approve above this severity
+    min_confidence: float = 0.85        # min confidence to auto-approve
 
 
 class TriageResult(BaseModel):
@@ -29,63 +33,54 @@ class TriageResult(BaseModel):
     final_severity: str
     auto_approve_eligible: bool
     reason: str
+    breakdown: List[str] = Field(default_factory=list)
 
 
 def triage_score(ctx: FunctionContext, data: TriageInput) -> TriageResult:
-    base = {"critical": 40, "high": 25, "medium": 10, "low": 0}
-    radius = {"single_service": 10, "multi_service": 25, "infrastructure": 40}
-    score = base.get(data.severity, 0) + radius.get(data.blast_radius, 0)
+    breakdown: List[str] = []
+
+    sev_pts = {"critical": 50, "high": 30, "medium": 15, "low": 5}
+    s = sev_pts.get(data.severity, 15)
+    breakdown.append(f"severity {data.severity} = +{s}")
+    score = s
+
+    blast_pts = {"single_service": 0, "multi_service": 15, "infrastructure": 30}
+    b = blast_pts.get(data.blast_radius, 0)
+    if b:
+        breakdown.append(f"blast radius {data.blast_radius} = +{b}")
+    score += b
 
     hour = data.hour_of_day if data.hour_of_day >= 0 else datetime.now(timezone.utc).hour
     if 0 <= hour <= 6:
-        score += 15                     # 3am incidents are worse: fewer humans awake
-
-    if data.affected_users > 10000:
-        score += 20
-    elif data.affected_users > 1000:
+        breakdown.append("off-hours (00:00-06:00 UTC) = +10")
         score += 10
 
-    order = ["low", "medium", "high", "critical"]
-    rank = {name: i for i, name in enumerate(order)}
+    if data.confidence < 0.6:
+        breakdown.append(f"low confidence ({data.confidence:.0%}) adds risk = +10")
+        score += 10
 
-    if score >= 70:
-        score_sev = "critical"
-    elif score >= 45:
-        score_sev = "high"
-    elif score >= 20:
-        score_sev = "medium"
-    else:
-        score_sev = "low"
+    score = max(0, min(100, score))
 
-    # Scoring only ESCALATES — never downgrade the raw severity (a critical stays critical).
-    raw = data.severity if data.severity in rank else "low"
-    final = order[max(rank[raw], rank[score_sev])]
-
-    if data.action_type == "restart_service":
-        data.confidence = max(data.confidence, 0.95)
-        score = 5
-        final = "low"
+    band = ("critical" if score >= 70 else "high" if score >= 45
+            else "medium" if score >= 25 else "low")
+    final = ORDER[max(RANK.get(data.severity, 1), RANK[band])]
+    breakdown.append(f"score {score}/100 -> band {band}; final = "
+                     f"max({data.severity}, {band}) = {final}")
 
     cfg = ctx.config
-    min_conf = data.min_confidence if data.min_confidence >= 0 else (cfg.min_confidence if cfg else 0.9)
-    auto_max = cfg.auto_max_severity if cfg else "high"
+    min_conf = cfg.min_confidence if cfg else 0.85
 
-    auto_ok = (
-        final != "critical"
-        and rank.get(final, 3) <= rank.get(auto_max, 2)
-        and data.confidence >= min_conf
-        and data.runbook_safe
-    )
+    gates = {
+        "runbook auto-safe": data.runbook_safe,
+        f"confidence >= {min_conf:.0%}": data.confidence >= min_conf,
+        "not critical": final != "critical",
+        "blast radius not infrastructure": data.blast_radius != "infrastructure",
+    }
+    auto_ok = all(gates.values())
+    failed = [k for k, v in gates.items() if not v]
+    reason = ("Auto-approve eligible — all gates passed"
+              if auto_ok else "Needs human approval — failed: " + "; ".join(failed))
 
-    if final == "critical":
-        reason = "Critical incidents always require human approval"
-    elif not data.runbook_safe:
-        reason = "No runbook marked auto-remediation safe"
-    elif data.confidence < min_conf:
-        reason = f"Confidence {data.confidence:.2f} below threshold {min_conf:.2f}"
-    elif auto_ok:
-        reason = "High confidence + safe runbook + non-critical: auto-approve eligible"
-    else:
-        reason = "Does not meet auto-approval rules"
-
-    return TriageResult(score=score, final_severity=final, auto_approve_eligible=auto_ok, reason=reason)
+    return TriageResult(score=score, final_severity=final,
+                        auto_approve_eligible=auto_ok, reason=reason,
+                        breakdown=breakdown)

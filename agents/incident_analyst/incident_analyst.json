@@ -110,10 +110,11 @@
       },
       {
         "permission_ids": [
-          "folder.read"
+          "datastore.record.read",
+          "datastore.table.read"
         ],
-        "resource_name": "/runbooks",
-        "resource_type": "folder"
+        "resource_name": "runbooks",
+        "resource_type": "datastore_table"
       }
     ]
   },

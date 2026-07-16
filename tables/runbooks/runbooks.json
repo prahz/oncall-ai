@@ -1,0 +1,62 @@
+{
+  "columns": [
+    {
+      "auto": true, "computed": false, "default": null, "description": null,
+      "expression": null, "foreign_key": null, "max_length": null,
+      "name": "id", "options": null, "required": true, "system": false,
+      "type": "UUID", "type_params": null, "unique": true
+    },
+    {
+      "auto": false, "computed": false, "default": null,
+      "description": "Service this runbook covers (matches monitored_services.service and the alert service)",
+      "expression": null, "foreign_key": null, "max_length": 120,
+      "name": "service", "options": null, "required": true, "system": false,
+      "type": "TEXT", "type_params": null, "unique": true
+    },
+    {
+      "auto": false, "computed": false, "default": null,
+      "description": "Short runbook title",
+      "expression": null, "foreign_key": null, "max_length": 200,
+      "name": "title", "options": null, "required": false, "system": false,
+      "type": "TEXT", "type_params": null, "unique": false
+    },
+    {
+      "auto": false, "computed": false, "default": "important",
+      "description": "Service tier: critical | important | non-critical",
+      "expression": null, "foreign_key": null, "max_length": 40,
+      "name": "tier", "options": null, "required": false, "system": false,
+      "type": "TEXT", "type_params": null, "unique": false
+    },
+    {
+      "auto": false, "computed": false, "default": false,
+      "description": "Deterministic verdict: may the AI auto-remediate this service without a human?",
+      "expression": null, "foreign_key": null, "max_length": null,
+      "name": "auto_safe", "options": null, "required": true, "system": false,
+      "type": "BOOLEAN", "type_params": null, "unique": false
+    },
+    {
+      "auto": false, "computed": false, "default": null,
+      "description": "Full markdown runbook the analyst reads to diagnose and fix",
+      "expression": null, "foreign_key": null, "max_length": null,
+      "name": "content", "options": null, "required": true, "system": false,
+      "type": "TEXT", "type_params": null, "unique": false
+    },
+    {
+      "auto": true, "computed": false, "default": null, "description": null,
+      "expression": null, "foreign_key": null, "max_length": null,
+      "name": "created_at", "options": null, "required": false, "system": true,
+      "type": "DATETIME", "type_params": null, "unique": false
+    },
+    {
+      "auto": true, "computed": false, "default": null, "description": null,
+      "expression": null, "foreign_key": null, "max_length": null,
+      "name": "updated_at", "options": null, "required": false, "system": true,
+      "type": "DATETIME", "type_params": null, "unique": false
+    }
+  ],
+  "config": {},
+  "enable_rls": false,
+  "name": "runbooks",
+  "primary_key_column": "id",
+  "visibility": "POD"
+}
