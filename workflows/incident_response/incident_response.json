@@ -41,12 +41,24 @@
       "id": "e5c",
       "label": null,
       "source": "notify_approval",
+      "target": "notify_delegation_human"
+    },
+    {
+      "id": "e5e",
+      "label": null,
+      "source": "notify_delegation_human",
       "target": "approval"
     },
     {
       "id": "e5b",
       "label": "auto-safe",
       "source": "auto_route",
+      "target": "notify_delegation_agent"
+    },
+    {
+      "id": "e5d",
+      "label": null,
+      "source": "notify_delegation_agent",
       "target": "execute"
     },
     {
@@ -221,7 +233,7 @@
         "rules": [
           {
             "condition": "open.auto_approve_eligible == `true`",
-            "next_node_id": "execute"
+            "next_node_id": "notify_delegation_agent"
           }
         ]
       },
@@ -247,6 +259,46 @@
       },
       "id": "notify_approval",
       "label": "Notify channels (approval needed)",
+      "position": null,
+      "type": "FUNCTION"
+    },
+    {
+      "config": {
+        "function_name": "notify",
+        "input_mapping": {
+          "event": {
+            "type": "literal",
+            "value": "delegation_human"
+          },
+          "incident_id": {
+            "optional": false,
+            "type": "expression",
+            "value": "open.incident_id"
+          }
+        }
+      },
+      "id": "notify_delegation_human",
+      "label": "Notify human delegation",
+      "position": null,
+      "type": "FUNCTION"
+    },
+    {
+      "config": {
+        "function_name": "notify",
+        "input_mapping": {
+          "event": {
+            "type": "literal",
+            "value": "delegation_agent"
+          },
+          "incident_id": {
+            "optional": false,
+            "type": "expression",
+            "value": "open.incident_id"
+          }
+        }
+      },
+      "id": "notify_delegation_agent",
+      "label": "Notify agent delegation",
       "position": null,
       "type": "FUNCTION"
     },

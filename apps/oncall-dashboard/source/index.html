@@ -17,7 +17,7 @@
     --shadow-sm:0 1px 2px rgba(0,0,0,.5); --shadow-md:0 12px 34px rgba(0,0,0,.55); --shadow-lg:0 24px 64px rgba(0,0,0,.7);
     --glass:blur(25px); --sidebar:236px;
   }
-  :root[data-theme="light"]{
+  :root[data-mode="light"]{
     --bg:#fdfdfd; --surface:#ffffff; --surface2:#f6f7f8; --surface3:#eef0f2;
     --border:rgba(0,0,0,.09); --border2:rgba(0,0,0,.15);
     --text:#0a0a0a; --muted:rgba(0,0,0,.6); --dim:rgba(0,0,0,.4);
@@ -56,7 +56,7 @@
   html,body{height:100%}
   body{margin:0;color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;letter-spacing:-.01em;
     background:radial-gradient(900px 520px at 50% -300px,rgba(112,184,255,.07),transparent 72%),var(--bg);background-attachment:fixed}
-  :root[data-theme="light"] body{background:radial-gradient(900px 520px at 50% -320px,rgba(0,119,255,.05),transparent 72%),var(--bg)}
+  :root[data-mode="light"] body{background:radial-gradient(900px 520px at 50% -320px,rgba(0,119,255,.05),transparent 72%),var(--bg)}
   a{color:var(--accent);text-decoration:none}
   ::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-thumb{background:var(--surface3);border-radius:8px;border:2px solid transparent;background-clip:padding-box}::-webkit-scrollbar-thumb:hover{background:var(--border2);background-clip:padding-box}
   button{font:inherit;border:0;border-radius:9px;padding:8px 13px;font-weight:600;cursor:pointer;transition:.13s;white-space:nowrap;color:var(--text)}
@@ -168,15 +168,15 @@
   .bdots{display:flex;gap:5px} .bdots i{width:10px;height:10px;border-radius:50%;display:inline-block}
   .burl{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:4px 11px;font-size:11.5px;color:var(--muted);font-family:var(--mono);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .bview{height:230px;overflow:hidden;position:relative;background:#fff}
-  :root:not([data-theme="light"]) .bview{background:#0d1017}
+  :root:not([data-mode="light"]) .bview{background:#0d1017}
   .mpg{height:100%;display:flex;flex-direction:column;color:#0b0e14}
-  :root:not([data-theme="light"]) .mpg{color:#e7ecf3}
+  :root:not([data-mode="light"]) .mpg{color:#e7ecf3}
   .mpg .mnav{display:flex;align-items:center;gap:10px;padding:11px 16px;border-bottom:1px solid rgba(0,0,0,.08);font-weight:700}
-  :root:not([data-theme="light"]) .mpg .mnav{border-color:rgba(255,255,255,.08)}
+  :root:not([data-mode="light"]) .mpg .mnav{border-color:rgba(255,255,255,.08)}
   .mpg .mhero{flex:1;padding:22px;display:flex;flex-direction:column;justify-content:center;background:linear-gradient(135deg,rgba(59,130,246,.10),rgba(34,197,94,.06))}
   .mpg .mhero h3{font-size:22px;margin-bottom:6px;letter-spacing:-.5px} .mpg .mhero p{font-size:12.5px;opacity:.7;max-width:360px}
   .mpg .mrow{display:flex;gap:10px;margin-top:16px} .mpg .mrow div{flex:1;height:44px;border-radius:8px;background:rgba(0,0,0,.06);border:1px solid rgba(0,0,0,.06)}
-  :root:not([data-theme="light"]) .mpg .mrow div{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.06)}
+  :root:not([data-mode="light"]) .mpg .mrow div{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.06)}
   .errpg{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:linear-gradient(180deg,#1a0e10,#0d0708);color:#ffb4b4;text-align:center;padding:20px}
   .errpg .ec{font-size:40px} .errpg h3{font-size:19px;color:#ff9592} .errpg p{font-size:12px;color:#c88;font-family:var(--mono);max-width:80%}
   .mgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
@@ -226,12 +226,12 @@
 
   .dcol{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
   .klane{border-radius:16px;padding:12px 12px 4px;border:1px solid var(--border);background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(0,0,0,.16));box-shadow:inset 0 2px 10px rgba(0,0,0,.4)}
-  :root[data-theme="light"] .klane{background:linear-gradient(180deg,#eef0f4,#e7eaef);box-shadow:inset 0 2px 7px rgba(0,0,0,.07)}
+  :root[data-mode="light"] .klane{background:linear-gradient(180deg,#eef0f4,#e7eaef);box-shadow:inset 0 2px 7px rgba(0,0,0,.07)}
   .klh{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;color:var(--muted);padding:5px 8px 12px}
   .klh .kc{margin-left:auto;background:var(--surface3);border-radius:20px;padding:1px 9px;font-size:11px;color:var(--muted)}
   /* skeuomorphic delegation cards — raised, tactile */
   .dcard{position:relative;background:linear-gradient(180deg,color-mix(in srgb,var(--surface2) 88%,#ffffff 7%),var(--surface));border:1px solid var(--border2);border-left:3px solid var(--border2);border-radius:11px;padding:13px 14px 13px 15px;margin-bottom:12px;box-shadow:0 1px 0 rgba(255,255,255,.05) inset,0 2px 3px rgba(0,0,0,.3),0 8px 18px rgba(0,0,0,.28);transition:.14s}
-  :root[data-theme="light"] .dcard{background:linear-gradient(180deg,#ffffff,#f4f6f9);box-shadow:0 1px 0 rgba(255,255,255,.8) inset,0 2px 4px rgba(20,25,40,.08),0 8px 16px rgba(20,25,40,.06)}
+  :root[data-mode="light"] .dcard{background:linear-gradient(180deg,#ffffff,#f4f6f9);box-shadow:0 1px 0 rgba(255,255,255,.8) inset,0 2px 4px rgba(20,25,40,.08),0 8px 16px rgba(20,25,40,.06)}
   .dcard:hover{transform:translateY(-2px);box-shadow:0 3px 5px rgba(0,0,0,.34),0 14px 26px rgba(0,0,0,.34)}
   .dcard.agent{border-left-color:var(--accent)} .dcard.human{border-left-color:var(--muted)}
   .dcard .grip{position:absolute;top:12px;right:12px;color:var(--dim);letter-spacing:2px;font-size:10px;line-height:.6;opacity:.6}
@@ -283,6 +283,89 @@
   .toast{position:fixed;bottom:22px;left:calc(50% + var(--sidebar)/2);transform:translateX(-50%) translateY(10px);background:var(--surface);border:1px solid var(--border2);padding:12px 19px;border-radius:11px;font-size:13px;font-weight:600;box-shadow:var(--shadow-lg);opacity:0;transition:.22s;pointer-events:none;z-index:90}
   .toast.show{opacity:1;transform:translateX(-50%)} .toast.ok{border-color:color-mix(in srgb,var(--ok) 50%,transparent);color:var(--ok)} .toast.err{border-color:color-mix(in srgb,var(--crit) 50%,transparent);color:var(--crit)}
   @media(max-width:1080px){.grid,.row2{grid-template-columns:1fr}.kpis.k5,.kpis.k4{grid-template-columns:repeat(2,1fr)}.dcol{grid-template-columns:1fr}}
+  /* ---- light mode (wins over theme blocks by order) + per-theme light accents ---- */
+  :root[data-mode="light"]{
+    --bg:#fdfdfd; --surface:#ffffff; --surface2:#f6f7f8; --surface3:#eef0f2; --border:rgba(0,0,0,.09); --border2:rgba(0,0,0,.15);
+    --text:#0a0a0a; --muted:rgba(0,0,0,.6); --dim:rgba(0,0,0,.4);
+    --accent:#0077ff; --accent-h:#0062d6; --accent-soft:rgba(0,119,255,.1); --accent-ring:rgba(0,119,255,.25);
+    --crit:#e5484d; --crit-soft:rgba(255,23,63,.09); --high:#f76808; --med:#0077ff; --low:rgba(0,0,0,.5);
+    --ok:#12a150; --ok-soft:rgba(34,255,153,.14); --warn:#e8880b; --warn-soft:rgba(250,130,0,.12);
+    --shadow-sm:0 1px 2px rgba(20,25,40,.06),0 1px 3px rgba(20,25,40,.05); --shadow-md:0 8px 24px rgba(20,25,40,.1); --shadow-lg:0 18px 50px rgba(20,25,40,.18);
+  }
+  :root[data-mode="light"][data-theme="linear"]{--accent:#5e6ad2;--accent-h:#4954c8;--accent-soft:rgba(94,106,210,.12);--accent-ring:rgba(94,106,210,.25);--med:#5e6ad2}
+  :root[data-mode="light"][data-theme="grafana"]{--accent:#e55f00;--accent-h:#c95300;--accent-soft:rgba(229,95,0,.12);--accent-ring:rgba(229,95,0,.25);--med:#e55f00}
+  :root[data-mode="light"][data-theme="harness"]{--accent:#0092e4;--accent-h:#007ec4;--accent-soft:rgba(0,146,228,.12);--accent-ring:rgba(0,146,228,.25);--med:#0092e4}
+  :root[data-mode="light"][data-theme="coderabbit"]{--accent:#ea6d1f;--accent-h:#d05e15;--accent-soft:rgba(234,109,31,.12);--accent-ring:rgba(234,109,31,.25);--med:#ea6d1f}
+  /* activity tray */
+  .actbtn{position:relative;padding:8px 10px}
+  .actbtn .bdg{position:absolute;top:-5px;right:-5px;background:var(--accent);color:#fff;font-size:10px;font-weight:800;border-radius:10px;padding:1px 5px;min-width:17px;text-align:center}
+  .actmenu{width:330px}
+  .actitem{display:flex;gap:10px;align-items:center;padding:10px;border-radius:9px;cursor:pointer}
+  .actitem:hover{background:var(--surface2)}
+  .actitem .sp{width:12px;height:12px;border-radius:50%;border:2px solid var(--surface3);border-top-color:var(--accent);animation:spin .8s linear infinite;flex:none}
+  .actitem .tx{flex:1;min-width:0;font-size:12.5px;font-weight:600} .actitem .tx .sub{color:var(--dim);font-size:11px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  /* chat drawer */
+  .chatdw{position:fixed;top:0;right:0;width:min(380px,100vw);height:100vh;background:var(--surface);border-left:1px solid var(--border);z-index:75;display:flex;flex-direction:column;transform:translateX(105%);transition:transform .22s ease;box-shadow:var(--shadow-lg)}
+  .chatdw.open{transform:none}
+  .chathd{display:flex;align-items:center;gap:10px;padding:13px 16px;border-bottom:1px solid var(--border);font-weight:700}
+  .chatms{flex:1;overflow:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
+  .msg{max-width:90%;padding:9px 13px;border-radius:13px;font-size:13px;line-height:1.55;overflow-wrap:anywhere}
+  .msg.me{align-self:flex-end;background:var(--accent);color:#fff;border-bottom-right-radius:4px}
+  .msg.bot{align-self:flex-start;background:var(--surface2);border:1px solid var(--border);border-bottom-left-radius:4px}
+  .msg.bot .md p{margin:5px 0} .msg.bot .md p:first-child{margin-top:0} .msg.bot .md p:last-child{margin-bottom:0}
+  .typing{display:inline-flex;gap:4px;padding:2px 0} .typing i{width:6px;height:6px;border-radius:50%;background:var(--dim);animation:tp 1.2s infinite} .typing i:nth-child(2){animation-delay:.15s} .typing i:nth-child(3){animation-delay:.3s}
+  @keyframes tp{0%,60%,100%{opacity:.3;transform:none}30%{opacity:1;transform:translateY(-3px)}}
+  .chatin{display:flex;gap:8px;padding:12px 14px;border-top:1px solid var(--border)} .chatin input{flex:1}
+  /* onboarding */
+  .obslide{text-align:center;padding:14px 6px 6px}
+  .obslide .obi{font-size:42px;margin-bottom:12px}
+  .obslide h3{font-size:19px;margin-bottom:9px}
+  .obslide p{color:var(--muted);font-size:13.5px;max-width:400px;margin:0 auto;line-height:1.7}
+  .obdots{display:flex;gap:7px;justify-content:center;margin:22px 0 8px}
+  .obdots i{width:7px;height:7px;border-radius:50%;background:var(--surface3)} .obdots i.on{background:var(--accent)}
+  .obnav{display:flex;gap:9px;justify-content:center;margin-top:8px}
+  .footrow{display:flex;gap:8px;margin-top:8px} .footrow .btn{flex:1;justify-content:center;font-size:12px}
+  .modebtn{flex:none;width:42px;justify-content:center}
+  /* immersive site preview */
+  .site{height:100%;display:flex;flex-direction:column;background:#fff;color:#14171d;font-size:12px}
+  :root:not([data-mode="light"]) .site{background:#0e1117;color:#e8edf5}
+  .site .snav{display:flex;align-items:center;gap:14px;padding:10px 16px;border-bottom:1px solid rgba(0,0,0,.07);font-weight:600}
+  :root:not([data-mode="light"]) .site .snav{border-color:rgba(255,255,255,.07)}
+  .site .slogo{font-weight:800} .site .snav span{opacity:.75}
+  .site .spill{margin-left:auto;font-size:10.5px;padding:2px 9px;border-radius:12px;background:rgba(34,197,94,.16);color:#16a34a;opacity:1}
+  .shero{padding:16px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .sprod{border:1px solid rgba(0,0,0,.08);border-radius:10px;padding:10px}
+  :root:not([data-mode="light"]) .sprod{border-color:rgba(255,255,255,.09)}
+  .sprod .im{height:56px;border-radius:7px;margin-bottom:8px;display:grid;place-items:center;font-size:24px}
+  .sprod b{display:block;font-size:11.5px} .sprod span{opacity:.6;font-size:11px}
+  .site.api .ep{display:flex;gap:10px;align-items:center;padding:9px 16px;border-bottom:1px solid rgba(0,0,0,.06);font-family:var(--mono);font-size:11px}
+  :root:not([data-mode="light"]) .site.api .ep{border-color:rgba(255,255,255,.06)}
+  .mth{font-weight:800;padding:1px 7px;border-radius:5px;font-size:10px}
+  .mth.g{background:rgba(34,197,94,.16);color:#16a34a} .mth.p{background:rgba(59,130,246,.16);color:#3b82f6}
+  .ep .lat{margin-left:auto;opacity:.6}
+  .err502{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#0b0d12;color:#dfe5ee;gap:5px;text-align:center;padding:18px}
+  .err502 .code{font-size:46px;font-weight:800;letter-spacing:-2px;color:#ff6b7a;line-height:1}
+  .err502 .sub{font-size:13px;color:#9aa4b5} .err502 .det{font-family:var(--mono);font-size:11px;color:#6b7687;max-width:85%}
+  .err502 .rid{font-family:var(--mono);font-size:10.5px;color:#4d5768;margin-top:10px}
+  /* polish + responsiveness */
+  .toast{max-width:min(480px,92vw);text-align:left}
+  .tt,.dt,.rbn,.dm,.pd,.actrow .at{overflow-wrap:anywhere}
+  h2,h3{overflow-wrap:anywhere}
+  @media(max-width:1080px){.grid[style]{grid-template-columns:1fr !important}}
+  @media(max-width:760px){
+    .app{grid-template-columns:1fr}
+    .side{position:sticky;top:0;height:auto;flex-direction:row;align-items:center;gap:2px;padding:8px 10px;overflow-x:auto;z-index:45}
+    .side .lbl,.side .live,.side .foot{display:none} .brand{padding:0 8px 0 0} .brand .tag{display:none}
+    .navitem{padding:7px 10px;white-space:nowrap} .navitem .cnt{display:none} .navitem svg{display:none}
+    .topbar{flex-wrap:wrap;gap:8px;padding:11px 12px} .topbar .sub{display:none} .actions{flex-wrap:wrap}
+    .content{padding:12px 12px 24px;gap:12px}
+    .kpis.k4,.kpis.k5{grid-template-columns:repeat(2,1fr)}
+    .prail{grid-template-columns:1fr 1fr}
+    .amx{display:block;overflow-x:auto}
+    .chgrid{grid-template-columns:1fr} .dcol{grid-template-columns:1fr}
+    .modal{padding:8px} .modal .mcard{max-height:94vh}
+    .toast{left:50%;bottom:12px}
+  }
 </style>
 </head>
 <body>
@@ -300,16 +383,30 @@
     <div class="navitem" data-tab="delegations"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg>Delegations<span class="cnt" id="nav-del">0</span></div>
     <div class="navitem" data-tab="runbooks"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg>Runbooks</div>
     <div class="navitem" data-tab="alerts"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>Alerts &amp; schedules</div>
-    <div class="foot"><div class="lbl" style="padding:0 4px 6px">Theme</div><select class="themeSel" id="themeSel"><option value="resend">Resend</option><option value="linear">Linear</option><option value="grafana">Grafana</option><option value="harness">Harness</option><option value="coderabbit">CodeRabbit</option><option value="light">Light</option></select></div>
+    <div class="foot">
+      <div class="lbl" style="padding:0 4px 6px">Appearance</div>
+      <div style="display:flex;gap:8px"><select class="themeSel" id="themeSel" style="flex:1"><option value="resend">Resend</option><option value="linear">Linear</option><option value="grafana">Grafana</option><option value="harness">Harness</option><option value="coderabbit">CodeRabbit</option></select><button class="btn modebtn" id="modeBtn" title="Light / dark">◐</button></div>
+      <div class="footrow"><button class="btn sm" id="setBtn">⚙ Settings</button><button class="btn sm" id="helpBtn">? Help</button></div>
+    </div>
   </aside>
 
   <div class="main">
     <div class="topbar">
-      <div><h2 id="tbTitle">Overview</h2><div class="sub" id="tbSub">at a glance</div></div>
+      <div style="min-width:0"><h2 id="tbTitle">Overview</h2><div class="sub" id="tbSub">at a glance</div></div>
       <div class="actions" id="tbActions"></div>
+      <div class="actions" style="margin-left:0">
+        <div class="menu-wrap"><button class="btn actbtn" id="actBtn" title="In progress & needs you"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg><span class="bdg" id="actBdg" style="display:none">0</span></button><div class="menu actmenu" id="actMenu"></div></div>
+        <button class="btn" id="chatBtn" title="Ask oncall"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button>
+      </div>
     </div>
     <div class="content" id="view"><div class="skel">Loading…</div></div>
   </div>
+</div>
+
+<div class="chatdw" id="chatdw">
+  <div class="chathd">💬 Ask oncall <span style="margin-left:auto;color:var(--dim);font-weight:500;font-size:11.5px">on-call responder</span><button class="x" onclick="toggleChat(false)">✕</button></div>
+  <div class="chatms" id="chatms"><div class="msg bot"><div class="md"><p>Hi — I'm the on-call responder. Ask me about live incidents, pending approvals, or just say <b>status</b>.</p></div></div></div>
+  <div class="chatin"><input id="chatIn" placeholder="e.g. what's broken right now?"><button class="btn primary" id="chatSend">Send</button></div>
 </div>
 
 <div class="modal" id="modal"><div class="mcard"><div class="mhd"><h3 id="modalTitle">Document</h3><button class="x" onclick="closeModal()">✕</button></div><div class="mbody" id="modalBody"></div></div></div>
@@ -317,8 +414,10 @@
 
 <script>
 (function(){
-  var saved=null; try{saved=localStorage.getItem("oncall-theme");}catch(e){}
-  document.documentElement.setAttribute("data-theme", (saved==="dark"?"resend":saved) || "resend");
+  var th=null,mo=null; try{th=localStorage.getItem("oncall-theme");mo=localStorage.getItem("oncall-mode");}catch(e){}
+  if(th==="light"){mo="light";th="resend";} if(th==="dark")th="resend";
+  document.documentElement.setAttribute("data-theme", th||"resend");
+  document.documentElement.setAttribute("data-mode", mo||"dark");
   var cfg=window.__LEMMA_CONFIG__||{}; var base=(cfg.apiUrl||window.location.origin).replace(/\/$/,"");
   var s=document.createElement("script"); s.src=base+"/public/sdk/lemma-client.js"; s.onload=boot;
   s.onerror=function(){document.getElementById("view").innerHTML='<div class="skel">Failed to load Lemma SDK.</div>';};
@@ -327,7 +426,7 @@
 
 var client, ORG_ID="019eff2e-a06b-7647-b98a-605385ee80aa";
 var tab="overview", busy=false;
-var projects=[], selectedProject=null, ciRuns=[], incidents=[], delegations=[], alertRules=[], notif=[], runbooks=[], runbookSafe={};
+var projects=[], selectedProject=null, ciRuns=[], incidents=[], delegations=[], alertRules=[], notif=[], runbooks=[], runbookSafe={}, remediationActions=[];
 var selectedIncident=null, incFilter="all", alertScope="all", digestSched=null;
 var SEVRANK={low:0,medium:1,high:2,critical:3};
 var SETTINGS={autoMode:true, threshold:85, maxSev:"high", noInfra:true};
@@ -391,8 +490,12 @@ function fmt(t){if(!t)return"";try{return new Date(t).toLocaleString([],{month:"
 function pById(id){return projects.filter(function(p){return p.id===id;})[0];}
 function durStr(a,b){if(!a||!b)return"";var s=Math.max(0,Math.round((new Date(b)-new Date(a))/1000));if(s<60)return s+"s";var m=Math.floor(s/60);return m+"m "+(s%60)+"s";}
 
-(function(){var sel=document.getElementById("themeSel");var cur=document.documentElement.getAttribute("data-theme")||"resend";if(cur==="dark")cur="resend";document.documentElement.setAttribute("data-theme",cur);sel.value=cur;
-  sel.onchange=function(){document.documentElement.setAttribute("data-theme",sel.value);try{localStorage.setItem("oncall-theme",sel.value);}catch(e){}try{if(client)render();}catch(e){}};})();
+(function(){var sel=document.getElementById("themeSel");sel.value=document.documentElement.getAttribute("data-theme")||"resend";
+  sel.onchange=function(){document.documentElement.setAttribute("data-theme",sel.value);try{localStorage.setItem("oncall-theme",sel.value);}catch(e){}};
+  document.getElementById("modeBtn").onclick=function(){var m=document.documentElement.getAttribute("data-mode")==="light"?"dark":"light";document.documentElement.setAttribute("data-mode",m);try{localStorage.setItem("oncall-mode",m);}catch(e){}};
+  document.getElementById("setBtn").onclick=function(){openSettings();};
+  document.getElementById("helpBtn").onclick=function(){showOnboarding();};
+})();
 
 async function boot(){
   try{
@@ -401,9 +504,11 @@ async function boot(){
     if(st.status!=="authenticated"){client.auth.redirectToAuth();return;}
     setLive(true);
     Array.prototype.forEach.call(document.querySelectorAll(".navitem"),function(n){n.onclick=function(){setTab(n.getAttribute("data-tab"));};});
+    wireActivity(); wireChat();
     document.getElementById("view").innerHTML='<div class="skel">Setting up your workspace…</div>';
     await loadRunbookSafe(); await ensureSeed(); await loadAll();
     setTab("overview");
+    try{ if(!localStorage.getItem("oncall-onboarded")) showOnboarding(); }catch(e){}
     ["incidents","ci_runs","delegations"].forEach(function(tbl){try{client.datastore.watchChanges({table:tbl,onChange:function(){if(!busy)softRefresh();}});}catch(e){}});
     setInterval(function(){if(!busy)softRefresh();},6000);
   }catch(e){setLive(false);document.getElementById("view").innerHTML='<div class="skel">Error: '+esc(e&&e.message)+'</div>';}
@@ -419,7 +524,8 @@ async function ensureSeed(){
     var seed=[[p1,[["feat: wishlist share","a1b2c3d"],["chore: bump deps","b2c3d4e"],["fix: cart totals rounding","c3d4e5f"]]],[p2,[["feat: idempotency keys","d4e5f6a"],["test: refund path","e5f6a7b"],["chore: upgrade node 20","f6a7b8c"]]]];
     for(var s=0;s<seed.length;s++){var pr=seed[s][0],cs=seed[s][1];for(var r=0;r<cs.length;r++){await client.records.create("ci_runs",{project_id:pr.id,pipeline:"build-and-test",run_number:120+r,ref:"main",commit_sha:cs[r][1],commit_msg:cs[r][0],status:"passing",stage:"deploy"});}}
     var evs=ALERT_EVENTS.map(function(e){return e.ev;});
-    for(var c=0;c<2;c++){var ch=["slack","telegram"][c];for(var e=0;e<evs.length;e++){await client.records.create("alert_rules",{project_id:null,channel:ch,event:evs[e],enabled:true,label:"all projects"});}}
+    var slackTargets={delegation_agent:"C0BHQ0RS69Y",delegation_human:"C0BHTMR74S0"};
+    for(var c=0;c<2;c++){var ch=["slack","telegram"][c];for(var e=0;e<evs.length;e++){var ev=evs[e];await client.records.create("alert_rules",{project_id:null,channel:ch,event:ev,enabled:true,target:(ch==="slack"&&slackTargets[ev])?slackTargets[ev]:null,label:"all projects"});}}
     projects=(await client.records.list("projects",{limit:50})).items||[];
   }
   if(!selectedProject)selectedProject=projects[0]&&projects[0].id;
@@ -427,6 +533,7 @@ async function ensureSeed(){
 async function loadAll(){
   projects=(await client.records.list("projects",{limit:50})).items||[];
   incidents=(await client.records.list("incidents",{limit:120,sort:[{field:"created_at",direction:"desc"}]})).items||[];
+  remediationActions=(await client.records.list("remediation_actions",{limit:200,sort:[{field:"created_at",direction:"desc"}]})).items||[];
   delegations=(await client.records.list("delegations",{limit:120,sort:[{field:"created_at",direction:"desc"}]})).items||[];
   alertRules=(await client.records.list("alert_rules",{limit:200})).items||[];
   notif=(await client.records.list("notification_settings",{limit:50})).items||[];
@@ -434,6 +541,106 @@ async function loadAll(){
   try{var pend=(await client.datastore.query("select incident_id from remediation_actions where status='pending_approval'")).items||[];var set={};pend.forEach(function(p){set[p.incident_id]=1;});incidents.forEach(function(i){i._await=!!set[i.id];});}catch(e){}
   document.getElementById("nav-inc").textContent=incidents.filter(function(i){return ["detected","triaging","mitigating"].indexOf(i.status)>=0;}).length;
   document.getElementById("nav-del").textContent=delegations.filter(function(d){return ["queued","working"].indexOf(d.status)>=0;}).length;
+  renderActivity();
+}
+
+/* ---- activity tray: everything in progress or waiting on you ---- */
+function wireActivity(){var b=document.getElementById("actBtn"),m=document.getElementById("actMenu");if(!b)return;
+  b.onclick=function(e){e.stopPropagation();m.classList.toggle("open");};
+  document.addEventListener("click",function(e){if(!m.contains(e.target)&&!b.contains(e.target))m.classList.remove("open");});}
+function renderActivity(){
+  var items=[];
+  delegations.forEach(function(d){if(d.status==="working"||d.status==="solved")items.push({spin:d.assignee_type==="agent",t:(d.assignee_type==="agent"?"🤖 Agent solving":"👤 In progress")+(d.status==="solved"?" · pushing":""),sub:d.title||"",go:function(){viewAgentWork(d.id);}});});
+  incidents.forEach(function(i){
+    if(i._await)items.push({spin:false,t:"🔔 Approval needed — INC-"+i.number,sub:i.title||"",go:function(){selectedIncident=i.id;setTab("incidents");}});
+    else if(i.status==="mitigating"&&!delegations.some(function(d){return d.incident_id===i.id&&(d.status==="working"||d.status==="solved");}))items.push({spin:true,t:"⚠ Mitigating — INC-"+i.number,sub:i.service||"",go:function(){selectedIncident=i.id;setTab("incidents");}});
+  });
+  var b=document.getElementById("actBdg"),m=document.getElementById("actMenu");if(!b||!m)return;
+  b.style.display=items.length?"":"none"; b.textContent=items.length;
+  window._actItems=items;
+  m.innerHTML='<div class="mh">In progress & needs you</div>'+(items.length?items.map(function(it,ix){return '<div class="actitem" data-ai="'+ix+'">'+(it.spin?'<span class="sp"></span>':'<span style="width:12px;flex:none"></span>')+'<div class="tx">'+esc(it.t)+'<div class="sub">'+esc(it.sub)+'</div></div></div>';}).join(""):'<div class="empty" style="padding:18px;font-size:12.5px">All quiet — nothing in progress.</div>');
+  Array.prototype.forEach.call(m.querySelectorAll("[data-ai]"),function(el){el.onclick=function(){m.classList.remove("open");var it=window._actItems[+el.getAttribute("data-ai")];if(it&&it.go)it.go();};});
+}
+
+/* ---- settings modal (autonomy & routing) ---- */
+function openSettings(){
+  openModal("Settings · autonomy & routing");
+  function tog(label,desc,id,on){return '<div class="setrow"><div><b>'+label+'</b><div class="mut">'+desc+'</div></div><div class="sw'+(on?" on":"")+'" id="'+id+'"></div></div>';}
+  document.getElementById("modalBody").innerHTML=
+    tog("Autonomous mode","let the agent diagnose, patch and push on its own — within the limits below","setAuto",SETTINGS.autoMode)+
+    '<div class="setrow"><div><b>Confidence threshold</b><div class="mut">the agent auto-handles a fix only when it is at least this sure</div></div><div class="dialmini"><input type="range" min="60" max="98" value="'+SETTINGS.threshold+'" id="setThresh"><span id="setThreshV">'+SETTINGS.threshold+'%</span></div></div>'+
+    '<div class="setrow"><div><b>Auto-handle up to severity</b><div class="mut">anything above this always routes to a human for approval</div></div><select id="setMaxSev">'+["low","medium","high","critical"].map(function(s){return '<option value="'+s+'"'+(SETTINGS.maxSev===s?" selected":"")+'>'+s+'</option>';}).join("")+'</select></div>'+
+    tog("Never auto-handle infrastructure-wide","incidents with an infrastructure blast radius always need a human","setNoInfra",SETTINGS.noInfra)+
+    '<div class="policy" id="polText">'+esc(policyText())+'</div>'+
+    '<div class="mut" style="font-size:11.5px;margin-top:9px;color:var(--dim)">The runbook has the final say on what is auto-safe — these limits only tighten it. Critical and money-path services always need a human.</div>';
+  var sa=document.getElementById("setAuto");sa.onclick=function(){SETTINGS.autoMode=!SETTINGS.autoMode;sa.classList.toggle("on",SETTINGS.autoMode);saveSettings();updatePolicy();};
+  var sn=document.getElementById("setNoInfra");sn.onclick=function(){SETTINGS.noInfra=!SETTINGS.noInfra;sn.classList.toggle("on",SETTINGS.noInfra);saveSettings();updatePolicy();};
+  var tr=document.getElementById("setThresh");tr.oninput=function(){SETTINGS.threshold=+tr.value;document.getElementById("setThreshV").textContent=SETTINGS.threshold+"%";saveSettings();updatePolicy();};
+  var ms=document.getElementById("setMaxSev");ms.onchange=function(){SETTINGS.maxSev=ms.value;saveSettings();updatePolicy();};
+}
+
+/* ---- onboarding deck ---- */
+var OB=[
+ {i:"🛎",h:"Meet oncall",p:"Your autonomous on-call engineer. It watches your projects' pipelines, triages failures, fixes what's safe, and asks you when it isn't."},
+ {i:"🧪",h:"Break something, safely",p:"Open the Sandbox and simulate a pipeline failure. The live preview goes down, metrics spike, and an incident opens instantly."},
+ {i:"🧠",h:"Triage you can audit",p:"Every incident gets a 0–100 score built from severity, blast radius and confidence — with the full breakdown shown. Runbooks decide what the agent may fix alone."},
+ {i:"🤖",h:"The solver agent",p:"Safe fixes are delegated to the agent: it patches the code, runs the tests and opens a PR. Critical work always routes to a human."},
+ {i:"📣",h:"Slack, Telegram & digests",p:"Approvals, escalations and scheduled digests post to your channels. Tune everything in Alerts & schedules — then run the live demo."}
+];
+function showOnboarding(){
+  try{localStorage.setItem("oncall-onboarded","1");}catch(e){}
+  var idx=0; openModal("Welcome to oncall");
+  (function draw(){
+    var s=OB[idx];
+    document.getElementById("modalBody").innerHTML='<div class="obslide"><div class="obi">'+s.i+'</div><h3>'+esc(s.h)+'</h3><p>'+esc(s.p)+'</p><div class="obdots">'+OB.map(function(_,i){return '<i class="'+(i===idx?"on":"")+'"></i>';}).join("")+'</div><div class="obnav">'+(idx>0?'<button class="btn" id="obPrev">Back</button>':'')+(idx<OB.length-1?'<button class="btn primary" id="obNext">Next</button><button class="btn ghost" id="obSkip">Skip</button>':'<button class="btn primary" id="obDemo">Run a live demo</button><button class="btn" id="obDone">Start exploring</button>')+'</div></div>';
+    var p=document.getElementById("obPrev");if(p)p.onclick=function(){idx--;draw();};
+    var n=document.getElementById("obNext");if(n)n.onclick=function(){idx++;draw();};
+    var sk=document.getElementById("obSkip");if(sk)sk.onclick=closeModal;
+    var d=document.getElementById("obDemo");if(d)d.onclick=function(){closeModal();playDemo();};
+    var k=document.getElementById("obDone");if(k)k.onclick=closeModal;
+  })();
+}
+function pageGuide(title,html){openModal(title);document.getElementById("modalBody").innerHTML='<div class="guide" style="padding:2px 2px 6px">'+html+'</div>';}
+
+/* ---- chat drawer (talks to the on-call responder agent) ---- */
+var chatConv=null, chatBusy=false;
+function toggleChat(open){var d=document.getElementById("chatdw");d.classList.toggle("open",open===undefined?!d.classList.contains("open"):open);if(d.classList.contains("open"))setTimeout(function(){var i=document.getElementById("chatIn");if(i)i.focus();},220);}
+function wireChat(){document.getElementById("chatBtn").onclick=function(){toggleChat();};
+  var send=document.getElementById("chatSend"),inp=document.getElementById("chatIn");
+  function go(){var t=inp.value.trim();if(!t||chatBusy)return;inp.value="";chatAsk(t);}
+  send.onclick=go; inp.onkeydown=function(e){if(e.key==="Enter")go();};}
+function chatAdd(html,cls){var ms=document.getElementById("chatms");var d=document.createElement("div");d.className="msg "+cls;d.innerHTML=html;ms.appendChild(d);ms.scrollTop=ms.scrollHeight;return d;}
+async function chatAsk(text){
+  chatBusy=true; chatAdd(esc(text),"me");
+  var tip=chatAdd('<span class="typing"><i></i><i></i><i></i></span>',"bot");
+  function paint(md){tip.innerHTML='<div class="md">'+mdToHtml(md)+'</div>';var ms=document.getElementById("chatms");ms.scrollTop=ms.scrollHeight;}
+  try{
+    if(!chatConv) chatConv=await client.conversations.createForAgent("oncall_responder",{title:"dashboard chat"});
+    var acc="";
+    try{
+      var stream=await client.conversations.sendMessageStream(chatConv.id,{content:text});
+      var reader=stream.getReader(),dec=new TextDecoder(),buf="";
+      while(true){var r=await reader.read();if(r.done)break;buf+=dec.decode(r.value,{stream:true});
+        var evs=buf.split("\n\n");buf=evs.pop();
+        evs.forEach(function(ev){ev.split("\n").forEach(function(ln){if(ln.indexOf("data:")!==0)return;var raw=ln.slice(5).trim();if(!raw||raw==="[DONE]")return;
+          try{var o=JSON.parse(raw);
+            var dl=(o.delta&&(o.delta.content||o.delta.text))||o.content_delta||o.text_delta||(typeof o.delta==="string"?o.delta:"")||(((o.type||"").indexOf("delta")>=0)?(o.text||o.content||""):"");
+            if(typeof dl==="string"&&dl){acc+=dl;paint(acc);}
+            var full=(o.message&&o.message.role==="assistant"&&o.message.content)||(o.role==="assistant"&&o.content);
+            if(typeof full==="string"&&full.length>=acc.length){acc=full;paint(acc);}
+          }catch(e){}
+        });});
+      }
+    }catch(e){}
+    if(!acc){ // fallback: poll the conversation for the reply
+      for(var i=0;i<20&&!acc;i++){await sleep(3000);
+        try{var ml=(await client.conversations.messages.list(chatConv.id,{limit:50})).items||[];
+          for(var j=ml.length-1;j>=0;j--){var mm=ml[j];var role=mm.role||mm.author_type||"";var ct=mm.content;
+            if(/assistant|agent/i.test(role)&&ct){acc=(typeof ct==="string")?ct:(ct.text||ct.content||"");if(acc)break;}}}catch(e){}}
+    }
+    if(acc)paint(acc); else tip.innerHTML='<div class="md"><p>No reply yet — the responder may be busy. Try again in a moment.</p></div>';
+  }catch(e){tip.innerHTML='<div class="md"><p>Could not reach the responder ('+esc((e&&e.message)||"error")+').</p></div>';}
+  finally{chatBusy=false;}
 }
 async function softRefresh(){await loadAll();render();}
 function setTab(t){tab=t;Array.prototype.forEach.call(document.querySelectorAll(".navitem"),function(n){n.classList.toggle("on",n.getAttribute("data-tab")===t);});render();}
@@ -453,7 +660,14 @@ function metrics(){
   var mttr=durs.length?Math.round(durs.reduce(function(a,b){return a+b;},0)/durs.length):0;
   var pushed=delegations.filter(function(d){return d.status==="pushed";});
   var agent=pushed.filter(function(d){return d.assignee_type==="agent";}).length, human=pushed.length-agent;
-  var autoRate=pushed.length?Math.round(agent/pushed.length*100):0;
+  // When the production workflow handles execution, no delegation rows are created.
+  // Fall back to remediation_actions: executed_by === "agent" means the agent fixed it.
+  if(!pushed.length&&remediationActions.length){
+    var executed=remediationActions.filter(function(a){return a.status==="executed"||a.status==="approved";});
+    agent=executed.filter(function(a){return a.executed_by==="agent"||a.auto_approved===true;}).length;
+    human=executed.length-agent;
+  }
+  var autoRate=(agent+human)?Math.round(agent/(agent+human)*100):0;
   var hoursSaved=(agent*0.75+human*0.25);
   var active=incidents.filter(function(i){return ["detected","triaging","mitigating"].indexOf(i.status)>=0;}).length;
   var pend=incidents.filter(function(i){return i._await;}).length;
@@ -533,9 +747,21 @@ function metricsHtml(pid,health){var nm=(pById(pid)||{}).name||"x",seed=nm.lengt
     chart("Error rate",last(err).toFixed(1),"%",err,crit?"var(--crit)":"var(--accent)")+
     chart("p95 latency",Math.round(last(lat)),"ms",lat,(crit||bad)?"var(--crit)":"var(--ok)")+
     chart("Memory",Math.round(last(mem)),"%",mem,bad?"var(--warn)":"var(--ok)")+'</div>';}
-function previewFrame(p,health){var url=deployUrl(p);var body=(health==="failing")?
-    ('<div class="errpg"><div class="ec">⚠️</div><h3>502 · Application error</h3><p>'+esc((ciRuns.filter(function(r){return r.project_id===p.id&&r.status==="failing";})[0]||{}).error_signature||"the latest deployment failed its pipeline")+'</p><p style="color:#a66">oncall is on it — auto-remediation in progress</p></div>')
-    :('<div class="mpg"><div class="mnav">'+esc(p.emoji||"📦")+' '+esc(p.name)+'<span style="margin-left:auto;font-weight:500;opacity:.55;font-size:12px">Home · Docs · Status</span></div><div class="mhero"><h3>'+esc(p.name)+' is live</h3><p>'+esc(p.description||"")+'</p><div class="mrow"><div></div><div></div><div></div></div></div></div>');
+function sitePage(p){
+  if(/pay|api|billing/.test(p.slug||p.name||"")){
+    var eps=[["g","GET","/v1/charges","42ms"],["p","POST","/v1/charges","118ms"],["g","GET","/v1/refunds","38ms"],["p","POST","/v1/refunds","97ms"],["g","GET","/v1/balance","21ms"]];
+    return '<div class="site api"><div class="snav"><span class="slogo">'+esc(p.emoji||"")+' '+esc(p.name)+'</span><span>Docs</span><span>Changelog</span><span class="spill">● all systems operational</span></div>'+eps.map(function(e){return '<div class="ep"><span class="mth '+e[0]+'">'+e[1]+'</span>'+e[2]+'<span class="lat">'+e[3]+' · 200</span></div>';}).join("")+'</div>';
+  }
+  var prods=[["#dbeafe","👟","Runner Pro","$129.00"],["#fde7d2","🎒","Trail Pack 30L","$89.00"],["#dcfce7","⌚","Pulse Watch","$249.00"]];
+  return '<div class="site"><div class="snav"><span class="slogo">'+esc(p.emoji||"")+' '+esc(p.name)+'</span><span>New in</span><span>Men</span><span>Women</span><span class="spill">● live</span></div><div class="shero">'+prods.map(function(x){return '<div class="sprod"><div class="im" style="background:'+x[0]+'">'+x[1]+'</div><b>'+x[2]+'</b><span>'+x[3]+'</span></div>';}).join("")+'</div></div>';
+}
+function previewFrame(p,health){var url=deployUrl(p);
+  var body;
+  if(health==="failing"){
+    var sig=(ciRuns.filter(function(r){return r.project_id===p.id&&r.status==="failing";})[0]||{}).error_signature||"upstream returned an invalid response";
+    var rid=Math.random().toString(16).slice(2,10)+"-"+Math.random().toString(16).slice(2,6);
+    body='<div class="err502"><div class="code">502</div><div class="sub">Bad gateway — the application failed to respond</div><div class="det">'+esc(sig)+'</div><div class="rid">request id: '+rid+' · '+esc(url.replace("https://",""))+'</div></div>';
+  }else{ body=sitePage(p); }
   return '<div class="bframe"><div class="bbar"><div class="bdots"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i></div><div class="burl">'+esc(url)+'</div><span class="hbadge '+health+'"><span class="hd"></span>'+(health==="failing"?"deploy failed":health==="degraded"?"degraded":"live")+'</span></div><div class="bview">'+body+'</div></div>';}
 function logTail(p,health){var now=Date.now();function ts(off){return new Date(now-off*1000).toISOString().slice(11,19);}
   var normal=[['li','GET /api/health 200 12ms'],['li','GET / 200 34ms'],['lok','deploy '+(p.default_branch||"main")+' succeeded'],['li','GET /api/products 200 88ms'],['li','POST /api/cart 201 41ms'],['li','worker: processed 24 jobs'],['li','GET /assets/app.js 200 8ms']];
@@ -582,6 +808,7 @@ function ruleFor(ch,ev,pid){return alertRules.filter(function(r){return r.channe
 function eventEnabled(ch,ev,pid){var m=ruleFor(ch,ev,pid);if(!m.length)return true;return m.some(function(r){return r.enabled;});}
 function eventTarget(ch,ev,pid){var m=ruleFor(ch,ev,pid).filter(function(r){return r.target;})[0];return m?m.target:null;}
 var ESC_DEFAULT={manual_approval:1,escalation:1,delegation_agent:1,delegation_human:1};
+var FALLBACK_TARGET={manual_approval:"C0BDU08MWFN",escalation:"C0BDU08MWFN",delegation_agent:"C0BHQ0RS69Y",delegation_human:"C0BHTMR74S0"};
 function slackText(ev,inc){var num=inc.number,title=inc.title||"incident",svc=inc.service||"unknown",sev=(inc.severity||"").toUpperCase(),conf=inc.confidence!=null?Math.round(inc.confidence*100)+"%":"—",head="INC-"+num+" · "+title,dash="<"+window.location.origin+"|Open the oncall dashboard →>";
   if(ev==="manual_approval")return ":rotating_light: *Approval needed — "+head+"*\n*Service:* "+svc+"   *Severity:* "+sev+"   *Confidence:* "+conf+"\n*Root cause:* "+(inc.root_cause||"—")+"\n*Proposed fix:* "+(inc.suggested_fix||"—")+"\n*Approve / reject:* "+dash;
   if(ev==="escalation")return ":warning: *Escalation — "+head+"*\nAutomated remediation did not hold — a human is needed.";
@@ -589,7 +816,7 @@ function slackText(ev,inc){var num=inc.number,title=inc.title||"incident",svc=in
   if(ev==="delegation_human")return ":bust_in_silhouette: *Human delegation — "+head+"*\nAssigned to on-call. Please review & push: "+dash;
   if(ev==="rejected")return ":no_entry: *Rejected — "+head+"*\nRemediation was rejected and escalated to a human.";
   return ":white_check_mark: *Resolved & pushed — "+head+"*\n*Service:* "+svc+"\n*Fix:* "+(inc.suggested_fix||"—")+"  → pushed to "+(inc._branch||"main");}
-function notifyChannels(ev,inc,pid){try{var text=slackText(ev,inc);notif.forEach(function(r){if(r.enabled!==true||!r.auth_config||!r.send_operation)return;var ch=r.channel;if(!eventEnabled(ch,ev,pid))return;var target=eventTarget(ch,ev,pid)||(ESC_DEFAULT[ev]?(r.escalations_target||r.incidents_target):(r.incidents_target||r.escalations_target));if(!target)return;var payload={body:{}};payload.body[r.target_field||"channel"]=target;payload.body.text=text;try{client.connectors.operations.execute({organizationId:ORG_ID,authConfigName:r.auth_config},r.send_operation,payload,r.account_id||undefined).catch(function(){});}catch(e){}});}catch(e){}}
+function notifyChannels(ev,inc,pid){try{var text=slackText(ev,inc);notif.forEach(function(r){if(r.enabled!==true||!r.auth_config||!r.send_operation)return;var ch=r.channel;if(!eventEnabled(ch,ev,pid))return;var target=eventTarget(ch,ev,pid)||(ESC_DEFAULT[ev]?(r.escalations_target||r.incidents_target):(r.incidents_target||r.escalations_target))||FALLBACK_TARGET[ev];if(!target)return;var payload={body:{}};payload.body[r.target_field||"channel"]=target;payload.body.text=text;try{client.connectors.operations.execute({organizationId:ORG_ID,authConfigName:r.auth_config},r.send_operation,payload,r.account_id||undefined).catch(function(){});}catch(e){}});}catch(e){}}
 
 /* ================= lifecycle ================= */
 async function simulateFailure(i){
@@ -605,12 +832,14 @@ async function simulateFailure(i){
     var inc=await client.records.create("incidents",{title:sc.title,service:sc.service,severity:tri.final,status:"triaging",blast_radius:sc.blast,root_cause:sc.root,confidence:sc.confidence,suggested_fix:sc.fix,suspect_deploy:sc.suspect,affected_services:[sc.service],triggering_alerts:[alertObj],triage_score:tri.score,triage_reason:tri.reason,heal_attempts:0,project_id:pid,ci_run_id:run.id});
     await client.records.update("ci_runs",run.id,{incident_id:inc.id});
     await client.records.create("remediation_actions",{incident_id:inc.id,action_type:sc.action,description:sc.fix,confidence:sc.confidence,auto_approved:autoOk,status:autoOk?"approved":"pending_approval",executed_by:autoOk?"agent":null,result:autoOk?null:("Gated: "+(autoSafe?"":"runbook not auto-safe; ")+(tri.final==="critical"?"critical severity; ":"")+"needs human approval")});
+    // Fire the REAL incident_response workflow too: a pre-linked alert triggers it, and
+    // dedupe attaches it to this incident — live run history, zero duplicates.
+    try{client.records.create("alerts",{service:sc.service,source:(["healthcheck","github_actions","sentry","datadog","cloudwatch","custom"].indexOf(sc.source)>=0?sc.source:"custom"),severity:sc.severity,metric:sc.stage,message:sc.err+" — "+sc.stage,status:"triaged",incident_id:inc.id,correlation_group:"grp-inc-"+inc.number}).catch(function(){});}catch(e){}
     selectedIncident=inc.id;
-    toast("INC-"+inc.number+" opened from "+(proj?proj.name:"CI")+" · "+(autoOk?"auto-remediating":"needs approval"),autoOk?"ok":"");
-    await loadAll();if(tab!=="incidents")render();
-    if(autoOk){await sleep(900);await client.records.update("incidents",inc.id,{status:"mitigating",mitigated_at:nowISO()});await loadAll();render();var dl=await createDelegation(inc,run,"agent");await agentSolve(dl.id,true);}
+    toast("INC-"+inc.number+" opened on "+(proj?proj.name:"CI")+(autoOk?" — agent is on it, track it in the activity tray":" — waiting for your approval"),autoOk?"ok":"");
+    await loadAll();render();
+    if(autoOk){await sleep(900);await client.records.update("incidents",inc.id,{status:"mitigating",mitigated_at:nowISO()});await loadAll();render();var dl=await createDelegation(inc,run,"agent");agentSolve(dl.id,false);}
     else{notifyChannels("manual_approval",inc,pid);}
-    render();
   }catch(e){toast("Failed: "+(e&&e.message),"err");}finally{busy=false;}
 }
 function routeType(inc){   // auto-delegation governed by the Delegations settings
@@ -643,7 +872,7 @@ async function agentSolve(delId,autoOpen){
 }
 function viewAgentWork(delId){ (async function(){ var d=await client.records.get("delegations",delId); var inc=await client.records.get("incidents",d.incident_id); var proj=pById(inc.project_id), fix=fixFor(inc.service); var prNum=(d.pr_url||"").split("/").pop()||"—"; openModal("🤖 Solver agent · INC-"+inc.number); var lines=agentLines(inc,proj,fix,prNum); document.getElementById("modalBody").innerHTML='<div class="logbox">'+lines.map(function(L){return L.c==="diff"?('<div class="diffb">'+diffHtml(L.t)+'</div>'):('<div class="ll '+L.c+'">'+esc(L.t)+'</div>');}).join("")+'</div>'+(d.pr_url?'<div style="margin-top:12px"><a class="btn primary" href="'+esc(d.pr_url)+'" target="_blank">🔗 View PR</a> <button class="btn" onclick="closeModal()">Close</button></div>':''); })(); }
 async function assignHuman(delId){if(busy)return;busy=true;try{var d=await client.records.get("delegations",delId);var inc=await client.records.get("incidents",d.incident_id);await client.records.update("delegations",delId,{assignee_type:"human",assignee:"you@oncall",status:"working"});notifyChannels("delegation_human",inc,inc.project_id);toast("Assigned to you — click ‘Solve & push’ when ready","ok");await loadAll();render();}catch(e){toast("Failed","err");}finally{busy=false;}}
-async function assignAgentManual(delId){if(busy)return;busy=true;try{await agentSolve(delId,true);}catch(e){toast("Agent error: "+(e&&e.message),"err");}finally{busy=false;}}
+async function assignAgentManual(delId){if(busy)return;busy=true;try{toast("Agent is solving — watch from the card or the activity tray","ok");agentSolve(delId,false);}catch(e){toast("Agent error: "+(e&&e.message),"err");}finally{busy=false;}}
 async function pushFix(delId,by,fix,prNum){var d=await client.records.get("delegations",delId);var inc=await client.records.get("incidents",d.incident_id);var proj=pById(inc.project_id);fix=fix||fixFor(inc.service);prNum=prNum||(1000+Math.floor(Math.random()*8999));var pr=(proj?proj.repo_url:"")+"/pull/"+prNum;inc._branch=proj?proj.default_branch:"main";
   await client.records.update("delegations",delId,{status:"pushed",pr_url:pr,assignee:by,notes:fix.commit});
   var acts=(await client.records.list("remediation_actions",{limit:5,filters:[{field:"incident_id",op:"eq",value:inc.id}],sort:[{field:"created_at",direction:"desc"}]})).items||[];
@@ -693,8 +922,8 @@ async function approveIncident(incId,actId,approved){if(busy)return;busy=true;tr
     await client.records.update("incidents",incId,{status:"mitigating",mitigated_at:nowISO()});
     var dl=await createDelegation(inc,inc.ci_run_id?{id:inc.ci_run_id}:null,type);
     await loadAll(); setTab("delegations");
-    if(type==="agent"){ toast("INC-"+inc.number+" approved — agent is solving it","ok"); await agentSolve(dl.id,true); }
-    else{ toast("INC-"+inc.number+" approved — assigned to on-call ("+inc.severity+")","ok"); }
+    if(type==="agent"){toast("INC-"+inc.number+" approved — agent is solving it (activity tray)","ok");agentSolve(dl.id,false);}
+    else{toast("INC-"+inc.number+" approved — assigned to on-call ("+inc.severity+")","ok");}
   }else{await client.records.update("remediation_actions",actId,{status:"rejected",executed_by:"you@oncall",result:"rejected by on-call"});notifyChannels("rejected",inc,inc.project_id);toast("INC-"+inc.number+" rejected — escalated","");await loadAll();render();}
 }catch(e){toast("Failed: "+(e&&e.message),"err");}finally{busy=false;}}
 
@@ -712,22 +941,12 @@ function renderDelegations(){
     else if(d.status==="pushed")acts='<button class="btn sm" data-view="'+d.id+'">🤖 View agent work</button> <a class="chip" href="'+esc(d.pr_url||"#")+'" target="_blank">🔗 '+esc((d.pr_url||"PR").split("/").slice(-2).join("/"))+'</a>';
     return '<div class="dcard '+esc(d.assignee_type||"agent")+'"><div class="grip">⠿</div><div class="dt">'+(inc?"INC-"+esc(inc.number)+" · ":"")+esc(d.title)+'</div><div class="dm">'+(proj?esc(proj.emoji+" "+proj.name)+" · ":"")+esc(d.summary||"")+'</div>'+who+stBadge(d.status)+'<div class="acts">'+acts+'</div></div>';}
   function lane(icon,name,arr,empty){return '<div class="klane"><div class="klh">'+icon+' '+name+'<span class="kc">'+arr.length+'</span></div>'+(arr.length?arr.map(card).join(""):'<div class="empty" style="padding:24px 8px;font-size:12px">'+empty+'</div>')+'</div>';}
-  function togRow(label,desc,id,on){return '<div class="setrow"><div><b>'+label+'</b><div class="mut">'+desc+'</div></div><div class="sw'+(on?" on":"")+'" id="'+id+'"></div></div>';}
 
-  var settings='<div class="card"><div class="h">⚙ Autonomy &amp; routing <span class="count">when the agent acts on its own vs. asks a human</span></div><div style="padding:2px 17px 16px">'+
-    togRow("Autonomous mode","let the agent diagnose, patch and push on its own — within the limits below","setAuto",SETTINGS.autoMode)+
-    '<div class="setrow"><div><b>Confidence threshold</b><div class="mut">the agent auto-handles a fix only when it is at least this sure</div></div><div class="dialmini"><input type="range" min="60" max="98" value="'+SETTINGS.threshold+'" id="setThresh"><span id="setThreshV">'+SETTINGS.threshold+'%</span></div></div>'+
-    '<div class="setrow"><div><b>Auto-handle up to severity</b><div class="mut">anything above this always routes to a human for approval</div></div><select id="setMaxSev">'+["low","medium","high","critical"].map(function(s){return '<option value="'+s+'"'+(SETTINGS.maxSev===s?" selected":"")+'>'+s+'</option>';}).join("")+'</select></div>'+
-    togRow("Never auto-handle infrastructure-wide","incidents with an infrastructure blast radius always need a human","setNoInfra",SETTINGS.noInfra)+
-    '<div class="policy" id="polText">'+esc(policyText())+'</div>'+
-    '<div class="mut" style="font-size:11.5px;margin-top:8px;color:var(--dim)">The runbook still has the final say on what is auto-safe — these limits only tighten it, never loosen it. Critical &amp; money-path services stay human-approved.</div></div></div>';
+  document.getElementById("tbActions").innerHTML='<button class="btn" id="autonBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Autonomy settings</button>';
+  document.getElementById("autonBtn").onclick=openSettings;
 
-  v.innerHTML=settings+'<div class="dcol">'+lane("📥","Queued",q,"Nothing queued — approve an incident to route its fix here.")+lane("⚙️","In progress",w,"Idle.")+lane("✅","Pushed / done",done,"Nothing pushed yet.")+'</div>';
+  v.innerHTML='<div class="dcol">'+lane("📥","Queued",q,"Nothing queued — approve an incident to route its fix here.")+lane("⚙️","In progress",w,"Idle.")+lane("✅","Pushed / done",done,"Nothing pushed yet.")+'</div>';
 
-  var sa=document.getElementById("setAuto");sa.onclick=function(){SETTINGS.autoMode=!SETTINGS.autoMode;sa.classList.toggle("on",SETTINGS.autoMode);saveSettings();updatePolicy();};
-  var sn=document.getElementById("setNoInfra");sn.onclick=function(){SETTINGS.noInfra=!SETTINGS.noInfra;sn.classList.toggle("on",SETTINGS.noInfra);saveSettings();updatePolicy();};
-  var th=document.getElementById("setThresh");th.oninput=function(){SETTINGS.threshold=+th.value;document.getElementById("setThreshV").textContent=SETTINGS.threshold+"%";saveSettings();updatePolicy();};
-  var ms=document.getElementById("setMaxSev");ms.onchange=function(){SETTINGS.maxSev=ms.value;saveSettings();updatePolicy();};
   Array.prototype.forEach.call(v.querySelectorAll("[data-agent]"),function(b){b.onclick=function(){assignAgentManual(b.getAttribute("data-agent"));};});
   Array.prototype.forEach.call(v.querySelectorAll("[data-human]"),function(b){b.onclick=function(){assignHuman(b.getAttribute("data-human"));};});
   Array.prototype.forEach.call(v.querySelectorAll("[data-push]"),function(b){b.onclick=async function(){if(busy)return;busy=true;var id=b.getAttribute("data-push");try{await pushFix(id,"you@oncall");toast("Pushed to main ✓","ok");viewAgentWork(id);}catch(e){toast("Failed","err");}finally{busy=false;}};});
@@ -739,10 +958,10 @@ function renderDelegations(){
 var RB_TEMPLATE="# Runbook — <service>\n\n**Tier:** important\n**Auto-remediation safe: no**\n\n## Signals\n- <metric / log line that identifies this problem>\n\n## Likely cause\n<one or two sentences>\n\n## Fix\n1. <step>\n2. <step>\n\n## Rules\n- Auto-remediate only when: <conditions>\n- Always escalate to a human when: <conditions>\n\nAuto-remediation safe: no\n";
 function renderRunbooks(){
   var v=document.getElementById("view");
-  document.getElementById("tbActions").innerHTML='<label class="btn" style="cursor:pointer">Upload runbook<input type="file" id="rbFile" accept=".md,.markdown,.txt" style="display:none"></label><button class="btn primary" id="rbNew">New runbook</button>';
+  document.getElementById("tbActions").innerHTML='<button class="btn" id="rbHelp" title="What runbooks do">?</button><label class="btn" style="cursor:pointer">Upload runbook<input type="file" id="rbFile" accept=".md,.markdown,.txt" style="display:none"></label><button class="btn primary" id="rbNew">New runbook</button>';
+  document.getElementById("rbHelp").onclick=function(){pageGuide("Runbooks","A runbook is the playbook the AI follows for a service: the <b>signals</b> that identify a problem, the <b>fix</b>, and whether that fix is <b>auto-remediation safe</b>.<ol><li>Add one for any service or failure class — not just the built-ins.</li><li>Write the rules in markdown; flip <b>auto-safe</b> on or off. The triage engine reads it immediately.</li><li><b>Upload</b> an existing <code>.md</code>, or start from the built-in template.</li><li>After every resolved incident, the post-mortem appends a dated lesson here — the runbooks improve themselves.</li></ol>");};
   var rows=runbooks.slice().sort(function(a,b){return (a.service||"").localeCompare(b.service||"");});
-  v.innerHTML='<div class="card"><div class="h">Runbook library <span class="count">'+rows.length+' services · the AI reads these to diagnose &amp; fix</span></div><div>'+(rows.length?rows.map(function(r){return '<div class="rbcard"><div style="flex:1;min-width:0"><div class="rbn">'+esc(r.service)+' <span class="prov">'+esc(r.tier||"tier")+'</span></div><div class="rbt">'+esc(r.title||"")+'</div></div><span class="st '+(r.auto_safe?"st-resolved":"")+'">'+(r.auto_safe?"auto-remediation safe":"human approval")+'</span><button class="btn sm" data-edit="'+r.id+'">Edit</button><button class="btn sm ghost" data-del="'+r.id+'">Delete</button></div>';}).join(""):'<div class="empty">No runbooks yet — create one or upload a .md file.</div>')+'</div></div>'+
-    '<div class="card"><div class="h">What a runbook is</div><div class="guide">A runbook is the playbook the AI follows for a service: the <b>signals</b> that identify a problem, the <b>fix</b>, and whether that fix is <b>auto-remediation safe</b>. Add one for any service or failure class — not just the built-ins. Write the rules in markdown, flip <b>auto-safe</b> on/off, and the triage engine picks it up. You can also <b>upload</b> an existing <code>.md</code> or start from the built-in template.</div></div>';
+  v.innerHTML='<div class="card"><div class="h">Runbook library <span class="count">'+rows.length+' services · the AI reads these to diagnose &amp; fix</span></div><div>'+(rows.length?rows.map(function(r){return '<div class="rbcard"><div style="flex:1;min-width:0"><div class="rbn">'+esc(r.service)+' <span class="prov">'+esc(r.tier||"tier")+'</span></div><div class="rbt">'+esc(r.title||"")+'</div></div><span class="st '+(r.auto_safe?"st-resolved":"")+'">'+(r.auto_safe?"auto-remediation safe":"human approval")+'</span><button class="btn sm" data-edit="'+r.id+'">Edit</button><button class="btn sm ghost" data-del="'+r.id+'">Delete</button></div>';}).join(""):'<div class="empty">No runbooks yet — create one or upload a .md file.</div>')+'</div></div>';
   Array.prototype.forEach.call(v.querySelectorAll("[data-edit]"),function(b){b.onclick=function(){editRunbook(b.getAttribute("data-edit"));};});
   Array.prototype.forEach.call(v.querySelectorAll("[data-del]"),function(b){b.onclick=function(){delRunbook(b.getAttribute("data-del"));};});
   document.getElementById("rbNew").onclick=function(){editRunbook(null);};
@@ -778,13 +997,14 @@ function cronLabel(cron){var f=cronParse(cron),names={daily:"Daily",weekdays:"We
 
 function renderAlerts(){
   var v=document.getElementById("view");
-  document.getElementById("tbActions").innerHTML='<button class="btn" id="testAppr">Send test approval</button><button class="btn primary" id="sendStats">Send daily digest</button>';
+  document.getElementById("tbActions").innerHTML='<button class="btn" id="alHelp" title="How notifications work">?</button><button class="btn" id="testAppr">Send test approval</button><button class="btn primary" id="sendStats">Send daily digest</button>';
   document.getElementById("sendStats").onclick=sendStatsNow; document.getElementById("testAppr").onclick=sendTestApproval;
+  document.getElementById("alHelp").onclick=function(){pageGuide("Alerts & schedules","<ol><li><b>Channels</b> — Slack and Telegram are connected through Lemma connectors. Toggle a channel on, and use <b>Configure</b> to change which channel/chat id it posts to. <b>Send test</b> fires a live check.</li><li><b>Scheduled digest</b> — posts an ops summary automatically. Set the frequency and time (UTC); it rewrites the real cron schedule.</li><li><b>Notification rules</b> — choose which events ping which channel, globally or per project. Agent- and human-delegation events can route to their own dedicated channels.</li><li><b>Send test approval</b> — posts a sample approval to the escalation channel so you can show the human-in-the-loop flow.</li></ol>");};
 
   var icon={slack:"💬",telegram:"✈️"};
   var chHtml=notif.slice().sort(function(a,b){return (a.channel||"").localeCompare(b.channel||"");}).map(function(r){var on=r.enabled===true;
-    return '<div class="chrow"><div class="chic">'+(icon[r.channel]||"🔔")+'</div><div style="flex:1;min-width:0"><div style="font-weight:600">'+esc(r.label||r.channel)+' <span class="st '+(r.account_id?"st-resolved":"")+'" style="margin-left:4px">'+(r.account_id?"connected":"not connected")+'</span></div><div style="font-size:11.5px;color:var(--dim)">posts through the '+esc(r.channel)+' connector</div></div><div class="sw'+(on?" on":"")+'" data-chtoggle="'+r.id+'" title="enable channel"></div></div>'+
-    '<div class="chgrid"><div class="field" style="margin:0"><label>Incidents '+(r.channel==="telegram"?"chat id":"channel id")+'</label><input value="'+esc(r.incidents_target||"")+'" data-chid="'+r.id+'" data-chf="incidents_target" placeholder="'+(r.channel==="telegram"?"-100…":"C0…")+'"></div><div class="field" style="margin:0"><label>Escalations '+(r.channel==="telegram"?"chat id":"channel id")+'</label><input value="'+esc(r.escalations_target||"")+'" data-chid="'+r.id+'" data-chf="escalations_target" placeholder="same or a dedicated channel"></div><button class="btn sm" data-chtest="'+r.id+'">Send test</button></div>';
+    return '<div class="chrow"><div class="chic">'+(icon[r.channel]||"🔔")+'</div><div style="flex:1;min-width:0"><div style="font-weight:600">'+esc(r.label||r.channel)+' <span class="st '+(r.account_id?"st-resolved":"")+'" style="margin-left:4px">'+(r.account_id?"connected":"not connected")+'</span></div><div style="font-size:11.5px;color:var(--dim)">posts through the '+esc(r.channel)+' connector</div></div><button class="btn sm ghost" data-cfg="'+r.id+'">Configure</button><button class="btn sm" data-chtest="'+r.id+'">Send test</button><div class="sw'+(on?" on":"")+'" data-chtoggle="'+r.id+'" title="enable channel"></div></div>'+
+    '<div class="chgrid" id="cfg-'+r.id+'" style="display:none"><div class="field" style="margin:0"><label>Incidents '+(r.channel==="telegram"?"chat id":"channel id")+'</label><input value="'+esc(r.incidents_target||"")+'" data-chid="'+r.id+'" data-chf="incidents_target" placeholder="'+(r.channel==="telegram"?"-100…":"C0…")+'"></div><div class="field" style="margin:0"><label>Escalations '+(r.channel==="telegram"?"chat id":"channel id")+'</label><input value="'+esc(r.escalations_target||"")+'" data-chid="'+r.id+'" data-chf="escalations_target" placeholder="same or a dedicated channel"></div><span style="color:var(--dim);font-size:11px;align-self:center">saves as you type</span></div>';
   }).join("");
 
   var f=digestSched?cronParse((digestSched.config||{}).cron):{freq:"daily",time:"09:00"};
@@ -799,12 +1019,12 @@ function renderAlerts(){
   v.innerHTML=
     '<div class="card"><div class="h">Channels <span class="count">connect Slack &amp; Telegram</span></div>'+chHtml+'</div>'+
     '<div class="card"><div class="h">Scheduled digest <span class="count">time &amp; frequency</span></div>'+schHtml+'</div>'+
-    '<div class="card"><div class="h">Notification rules <span class="count">what pings which channel</span><select id="scopeSel" style="margin-left:auto">'+scopeOpts+'</select></div><table class="amx"><thead><tr><th>Event</th><th class="c">Slack</th><th class="c">Telegram</th><th>Route to channel</th></tr></thead><tbody>'+rowsHtml+'</tbody></table></div>'+
-    '<div class="card"><div class="h">How it works</div><div class="guide"><ol><li><b>Connect</b> a channel above and set the id oncall should post to (Slack channel like <code>C0…</code>, Telegram chat like <code>-100…</code>). Hit <b>Send test</b> to confirm.</li><li><b>Notification rules</b> pick exactly which events ping which channel — globally or per project. Agent- and human-delegation events can route to their own channels.</li><li><b>Scheduled digest</b> posts an ops summary automatically — set the frequency &amp; time, or send one now.</li><li><b>Send test approval</b> posts a sample approval to your escalation channel so you can see the human-in-the-loop flow.</li></ol></div></div>';
+    '<div class="card"><div class="h">Notification rules <span class="count">what pings which channel</span><select id="scopeSel" style="margin-left:auto">'+scopeOpts+'</select></div><table class="amx"><thead><tr><th>Event</th><th class="c">Slack</th><th class="c">Telegram</th><th>Route to channel</th></tr></thead><tbody>'+rowsHtml+'</tbody></table></div>';
 
   document.getElementById("scopeSel").onchange=function(){alertScope=this.value;render();};
   Array.prototype.forEach.call(v.querySelectorAll("[data-ch][data-ev]"),function(sw){sw.onclick=function(){toggleRule(sw.getAttribute("data-ch"),sw.getAttribute("data-ev"),pid,sw);};});
   Array.prototype.forEach.call(v.querySelectorAll("[data-tev]"),function(inp){inp.onchange=function(){setRuleTarget(inp.getAttribute("data-tev"),pid,inp.value.trim());};});
+  Array.prototype.forEach.call(v.querySelectorAll("[data-cfg]"),function(b){b.onclick=function(){var el=document.getElementById("cfg-"+b.getAttribute("data-cfg"));if(el)el.style.display=el.style.display==="none"?"":"none";};});
   Array.prototype.forEach.call(v.querySelectorAll("[data-chtoggle]"),function(sw){sw.onclick=function(){toggleChannel(sw.getAttribute("data-chtoggle"),sw);};});
   Array.prototype.forEach.call(v.querySelectorAll("[data-chf]"),function(inp){inp.onchange=function(){saveChannelField(inp.getAttribute("data-chid"),inp.getAttribute("data-chf"),inp.value.trim());};});
   Array.prototype.forEach.call(v.querySelectorAll("[data-chtest]"),function(b){b.onclick=function(){testChannel(b.getAttribute("data-chtest"));};});
@@ -818,7 +1038,7 @@ async function toggleChannel(id,sw){var r=notif.filter(function(x){return x.id==
 async function saveChannelField(id,field,val){try{var patch={};patch[field]=val||null;await client.records.update("notification_settings",id,patch);var r=notif.filter(function(x){return x.id===id;})[0];if(r)r[field]=val;toast("Saved","ok");}catch(e){toast("Failed: "+(e&&e.message),"err");}}
 async function testChannel(id){var r=notif.filter(function(x){return x.id===id;})[0];if(!r||!r.auth_config){toast("Channel not connected","err");return;}var target=r.incidents_target||r.escalations_target;if(!target){toast("Set a channel id first","err");return;}var payload={body:{}};payload.body[r.target_field||"channel"]=target;payload.body.text=":wave: *oncall test* — "+r.channel+" is wired up correctly.";try{await client.connectors.operations.execute({organizationId:ORG_ID,authConfigName:r.auth_config},r.send_operation,payload,r.account_id||undefined);toast("Test sent to "+r.channel,"ok");}catch(e){toast("Test failed: "+(e&&e.message),"err");}}
 async function saveSchedule(){if(!digestSched){toast("Schedule still loading","err");return;}var freq=document.getElementById("sfreq").value,time=document.getElementById("stime").value,cron=cronBuild(freq,time),active=document.getElementById("schToggle").classList.contains("on");try{await client.schedules.update(digestSched.id,{config:{cron:cron},is_active:active});digestSched.config={cron:cron};digestSched.is_active=active;var lbl=document.getElementById("schLabel");if(lbl)lbl.textContent=cronLabel(cron);toast("Schedule saved — "+cronLabel(cron)+(active?"":" (paused)"),"ok");}catch(e){toast("Failed: "+(e&&e.message),"err");}}
-async function sendTestApproval(){var fake={number:"TEST",title:"Payment error spike after deploy pay-4f2a1c",service:"payment-service",severity:"high",confidence:0.88,root_cause:"Error rate 12.5% minutes after a bad deploy — needs a human to approve the rollback.",suggested_fix:"Roll back deploy pay-4f2a1c to the last known-good build."};var text=slackText("manual_approval",fake);var sent=0;notif.forEach(function(r){if(r.enabled!==true||!r.auth_config||!r.send_operation)return;var target=r.escalations_target||r.incidents_target;if(!target)return;var payload={body:{}};payload.body[r.target_field||"channel"]=target;payload.body.text=text;try{client.connectors.operations.execute({organizationId:ORG_ID,authConfigName:r.auth_config},r.send_operation,payload,r.account_id||undefined).catch(function(){});sent++;}catch(e){}});toast("Test approval sent to "+sent+" channel"+(sent!==1?"s":""),"ok");}
+async function sendTestApproval(){var fake={number:"TEST",title:"Payment error spike after deploy pay-4f2a1c",service:"payment-service",severity:"high",confidence:0.88,root_cause:"Error rate 12.5% minutes after a bad deploy — needs a human to approve the rollback.",suggested_fix:"Roll back deploy pay-4f2a1c to the last known-good build."};var text=slackText("manual_approval",fake);var sent=0;notif.forEach(function(r){if(r.enabled!==true||!r.auth_config||!r.send_operation)return;var target=r.escalations_target||r.incidents_target||FALLBACK_TARGET.manual_approval;if(!target)return;var payload={body:{}};payload.body[r.target_field||"channel"]=target;payload.body.text=text;try{client.connectors.operations.execute({organizationId:ORG_ID,authConfigName:r.auth_config},r.send_operation,payload,r.account_id||undefined).catch(function(){});sent++;}catch(e){}});toast("Test approval sent to "+sent+" channel"+(sent!==1?"s":""),"ok");}
 async function sendStatsNow(){var m=metrics();var msg=":bar_chart: *oncall — incident digest*\n*Incidents:* "+m.total+" total · "+m.active+" active · "+m.resolved+" resolved\n*Avg time-to-resolve:* "+mttrStr(m.mttr)+"   *Auto-resolved:* "+m.autoRate+"%\n*Awaiting approval:* "+m.pend+"   *Eng-hours saved:* "+m.hoursSaved.toFixed(1);var sent=0;notif.forEach(function(r){if(r.enabled!==true||!r.auth_config||!r.send_operation)return;if(!eventEnabled(r.channel,"daily_stats",null))return;var target=eventTarget(r.channel,"daily_stats",null)||r.incidents_target||r.escalations_target;if(!target)return;var payload={body:{}};payload.body[r.target_field||"channel"]=target;payload.body.text=msg;try{client.connectors.operations.execute({organizationId:ORG_ID,authConfigName:r.auth_config},r.send_operation,payload,r.account_id||undefined).catch(function(){});sent++;}catch(e){}});toast("Daily digest sent to "+sent+" channel"+(sent!==1?"s":""),"ok");}
 
 /* ================= modal ================= */

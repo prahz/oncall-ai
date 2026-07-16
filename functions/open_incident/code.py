@@ -123,6 +123,8 @@ async def open_incident(ctx: FunctionContext, data: OpenIncidentInput) -> OpenIn
     incident = pod.table("incidents").create({
         "title": data.title,
         "service": service,
+        "project_id": alert.get("project_id") or None,
+        "ci_run_id": alert.get("ci_run_id") or None,
         "severity": final,
         "status": "triaging",
         "blast_radius": data.blast_radius,
@@ -139,6 +141,14 @@ async def open_incident(ctx: FunctionContext, data: OpenIncidentInput) -> OpenIn
 
     # Link the triggering alert to the incident.
     pod.table("alerts").update(data.alert_id, {"incident_id": incident_id, "status": "triaged"})
+
+    # Link the originating CI run, if any, so the dashboard pipeline view can show it.
+    ci_run_id = alert.get("ci_run_id")
+    if ci_run_id:
+        try:
+            pod.table("ci_runs").update(ci_run_id, {"incident_id": incident_id})
+        except Exception:
+            pass
 
     # Create the remediation action (the row the approval gate acts on).
     action = pod.table("remediation_actions").create({

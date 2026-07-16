@@ -24,6 +24,14 @@ async def dedupe_and_correlate(ctx: FunctionContext, data: DedupeInput) -> Dedup
     alert = alerts.get(data.alert_id)
     service = alert.get("service")
 
+    # Pre-linked alert (the dashboard already opened/handled an incident for it):
+    # attach immediately so the workflow completes without duplicating the incident.
+    if alert.get("incident_id"):
+        return DedupeResult(
+            decision="attached", incident_id=str(alert["incident_id"]), is_duplicate=False,
+            reason="Alert pre-linked to an existing incident",
+        )
+
     # Look at recent alerts for the same service (most recent first).
     recent = pod.records.list(
         "alerts", limit=50,

@@ -7,10 +7,27 @@ from pydantic import BaseModel, Field
 from lemma_sdk import FunctionContext, Pod
 
 # Events that escalate to humans go to the "escalations" target; status updates go to
-# the "incidents" target. The per-channel destinations + connector wiring live in the
-# notification_settings table (not hardcoded), so this works for slack, telegram, etc.
-_ESCALATION_EVENTS = {"needs_approval", "escalated"}
+# the "incidents" target. Delegation events route through alert_rules when a dedicated
+# channel is configured, otherwise they fall back to the escalations target.
+# The per-channel destinations + connector wiring live in the notification_settings
+# table (not hardcoded), so this works for slack, telegram, etc.
+_ESCALATION_EVENTS = {"needs_approval", "escalated", "delegation_agent", "delegation_human"}
 
+
+def _read_alert_rules(pod: Pod) -> dict:
+    """Return a map (channel, event) -> alert_rules row for event-specific routing."""
+    try:
+        rows = pod.records.list("alert_rules", limit=200).to_dict()["items"]
+    except Exception:
+        return {}
+    rules = {}
+    for r in rows:
+        ch = r.get("channel")
+        ev = r.get("event")
+        if ch and ev:
+            # Last wins; there should be at most one enabled rule per channel/event.
+            rules[(ch, ev)] = r
+    return rules
 
 class NotifyInput(BaseModel):
     incident_id: str
@@ -66,8 +83,19 @@ def _build_message(event: str, inc: dict) -> str:
             f"Automated remediation did not pass the health re-check; a human is needed.\n"
             f"*Last proposed fix:* {fix}"
         )
-    if event == "auto_remediated":
+    if event == "delegation_agent":
         return (
+            f":robot_face: *Agent delegation — {header}*\n"
+            f"*Service:* {service}   *Severity:* {severity}\n"
+            f"The fix ({fix}) was handed to the AI agent. It will patch and open a PR."
+        )
+    if event == "delegation_human":
+        return (
+            f":bust_in_silhouette: *Human delegation — {header}*\n"
+            f"*Service:* {service}   *Severity:* {severity}\n"
+            f"Assigned to on-call. Please review & push."
+        )
+    if event == "auto_remediated":        return (
             f":white_check_mark: *Auto-remediated — {header}*\n"
             f"*Service:* {service}   *Severity:* {severity}\n"
             f"Runbook-safe fix applied automatically and the health check passed.\n"
@@ -88,7 +116,7 @@ def _build_message(event: str, inc: dict) -> str:
     )
 
 
-def _send(pod: Pod, row: dict, event: str, text: str) -> ChannelResult:
+def _send(pod: Pod, row: dict, event: str, text: str, rules: dict) -> ChannelResult:
     name = row.get("channel") or "?"
     if not row.get("enabled", False):
         return ChannelResult(channel=name, posted=False, skipped_reason="disabled")
@@ -98,9 +126,17 @@ def _send(pod: Pod, row: dict, event: str, text: str) -> ChannelResult:
     if not auth_config or not operation:
         return ChannelResult(channel=name, posted=False, skipped_reason="not configured")
 
+    # Alert rules can disable an event for a channel or override its target.
+    rule = rules.get((name, event))
+    if rule is not None and not rule.get("enabled", True):
+        return ChannelResult(channel=name, posted=False, skipped_reason="disabled by alert rule")
+
     # Pick the destination for this event, fall back to incidents target.
-    target = row.get("escalations_target") if event in _ESCALATION_EVENTS else row.get("incidents_target")
-    target = target or row.get("incidents_target") or row.get("escalations_target")
+    if rule and rule.get("target"):
+        target = rule["target"]
+    else:
+        target = row.get("escalations_target") if event in _ESCALATION_EVENTS else row.get("incidents_target")
+        target = target or row.get("incidents_target") or row.get("escalations_target")
     if not target:
         return ChannelResult(channel=name, posted=False, skipped_reason="no target")
 
@@ -129,12 +165,13 @@ async def notify(ctx: FunctionContext, data: NotifyInput) -> NotifyResult:
     pod = Pod.from_env()
     inc = pod.table("incidents").get(data.incident_id)
     text = _build_message(data.event, inc)
+    rules = _read_alert_rules(pod)
 
     rows = pod.records.list("notification_settings", limit=50).to_dict()["items"]
     if data.channel:
         rows = [r for r in rows if r.get("channel") == data.channel]
 
-    results = [_send(pod, r, data.event, text) for r in rows]
+    results = [_send(pod, r, data.event, text, rules) for r in rows]
     delivered = sum(1 for r in results if r.posted)
 
     return NotifyResult(

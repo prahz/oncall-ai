@@ -1,0 +1,11 @@
+# OS / archive junk
+__MACOSX/
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.pyc
+
+# deploy artifacts
+package.json.bak
