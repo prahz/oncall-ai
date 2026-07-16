@@ -6,7 +6,7 @@
 
 Built as a [Lemma](https://lemma.work) Pod — agents, workflows, functions, tables, schedules, connectors and a custom app, working as one product.
 
-**[▶ Live dashboard](https://oncall-dashboard-harsh-dev.apps.lemma.work)**
+**[▶ Live dashboard (Private - Only accessible by invite](https://oncall-dashboard-harsh-dev.apps.lemma.work)**
 
 <img src="screenshotsOncall/overview.png" width="100%" alt="oncall overview dashboard" />
 <em>The Overview: live MTTR, auto-resolution rate, incident volume, resolution outcomes and a full audit trail — the health of your ops at a glance.</em>
